@@ -3,588 +3,215 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UML ÆÚÄ©Á·Ï°</title>
+<title>UML æœŸæœ«ç»ƒä¹ </title>
 <style>
-  :root {
-    --bg: #f8f9fa;
-    --card: #ffffff;
-    --text: #1a1a2e;
-    --sub: #6c757d;
-    --accent: #4f46e5;
-    --accent-hover: #4338ca;
-    --border: #e5e7eb;
-    --correct: #059669;
-    --wrong: #dc2626;
-    --correct-bg: #ecfdf5;
-    --wrong-bg: #fef2f2;
-    --radius: 16px;
-    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-    --shadow-lg: 0 10px 40px rgba(0,0,0,.08);
-  }
-  * { margin:0; padding:0; box-sizing:border-box }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  .container { max-width: 780px; margin:0 auto; padding: 40px 20px 80px }
-
-  header {
-    text-align: center;
-    padding: 48px 0 40px;
-  }
-  header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -.02em;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  header p {
-    color: var(--sub);
-    margin-top: 6px;
-    font-size: .95rem;
-  }
-
-  .progress-wrap {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--bg);
-    padding: 12px 0 16px;
-  }
-  .progress-bar {
-    height: 6px;
-    border-radius: 99px;
-    background: var(--border);
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4f46e5, #7c3aed);
-    border-radius: 99px;
-    transition: width .4s ease;
-  }
-  .progress-text {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    font-size: .82rem;
-    color: var(--sub);
-  }
-
-  .section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 36px 0 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-title::before {
-    content: '';
-    width: 4px;
-    height: 20px;
-    background: var(--accent);
-    border-radius: 99px;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px 28px;
-    margin-bottom: 14px;
-    box-shadow: var(--shadow);
-    transition: all .2s ease;
-    position: relative;
-  }
-  .card:hover {
-    box-shadow: var(--shadow-lg);
-    border-color: #d1d5db;
-  }
-  .card.correct {
-    border-color: var(--correct);
-    background: var(--correct-bg);
-  }
-  .card.wrong {
-    border-color: var(--wrong);
-    background: var(--wrong-bg);
-  }
-  .card.unanswered {
-    border-color: #f59e0b;
-    background: #fffbeb;
-  }
-
-  .q-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: #eef2ff;
-    color: var(--accent);
-    font-size: .8rem;
-    font-weight: 700;
-    margin-right: 10px;
-    flex-shrink: 0;
-  }
-  .q-header {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 14px;
-  }
-  .q-text {
-    font-weight: 500;
-    font-size: .98rem;
-  }
-  .q-type {
-    font-size: .72rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 99px;
-    margin-left: 8px;
-    white-space: nowrap;
-  }
-  .q-type.choice {
-    background: #eef2ff;
-    color: var(--accent);
-  }
-  .q-type.tf {
-    background: #fef3c7;
-    color: #b45309;
-  }
-
-  .options { display:flex; flex-direction:column; gap:6px }
-  .option {
-    display: flex;
-    align-items: center;
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: 1.5px solid var(--border);
-    cursor: pointer;
-    transition: all .15s ease;
-    font-size: .92rem;
-    user-select: none;
-  }
-  .option:hover:not(.disabled) {
-    border-color: var(--accent);
-    background: #faf9ff;
-  }
-  .option input { display:none }
-  .option .dot {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 2px solid #d1d5db;
-    margin-right: 12px;
-    flex-shrink: 0;
-    transition: all .2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .option .dot::after {
-    content: '';
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: transparent;
-    transition: all .2s ease;
-  }
-  .option.selected .dot {
-    border-color: var(--accent);
-  }
-  .option.selected .dot::after {
-    background: var(--accent);
-  }
-  .option.selected {
-    border-color: var(--accent);
-    background: #faf9ff;
-  }
-
-  .option.disabled { cursor:default; opacity:.7 }
-  .option.correct-ans {
-    border-color: var(--correct) !important;
-    background: var(--correct-bg) !important;
-  }
-  .option.correct-ans .dot {
-    border-color: var(--correct) !important;
-  }
-  .option.correct-ans .dot::after {
-    background: var(--correct) !important;
-  }
-  .option.wrong-ans {
-    border-color: var(--wrong) !important;
-    background: var(--wrong-bg) !important;
-  }
-  .option.wrong-ans .dot {
-    border-color: var(--wrong) !important;
-  }
-  .option.wrong-ans .dot::after {
-    background: var(--wrong) !important;
-  }
-
-  .feedback {
-    margin-top: 12px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: .88rem;
-    display: none;
-  }
-  .feedback.show { display:block }
-  .feedback.correct-fb {
-    background: #d1fae5;
-    color: #065f46;
-  }
-  .feedback.wrong-fb {
-    background: #fee2e2;
-    color: #991b1b;
-  }
-  .feedback.unanswered-fb {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .btn-wrap {
-    text-align: center;
-    margin-top: 40px;
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 14px 40px;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .2s ease;
-    letter-spacing: .01em;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(79,70,229,.35);
-  }
-  .btn-primary:hover {
-    background: var(--accent-hover);
-    box-shadow: 0 6px 20px rgba(79,70,229,.45);
-    transform: translateY(-1px);
-  }
-  .btn-secondary {
-    background: var(--card);
-    color: var(--text);
-    border: 1.5px solid var(--border);
-  }
-  .btn-secondary:hover {
-    border-color: #c4b5fd;
-    background: #faf9ff;
-  }
-  .btn + .btn { margin-left: 12px }
-
-  .result {
-    text-align: center;
-    padding: 28px;
-    background: var(--card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-lg);
-    margin-bottom: 24px;
-    display: none;
-  }
-  .result.show { display:block; animation: fadeUp .4s ease }
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(12px) }
-    to   { opacity:1; transform:translateY(0) }
-  }
-  .result .score {
-    font-size: 3.5rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .result .detail {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    margin-top: 12px;
-    font-size: .9rem;
-    color: var(--sub);
-  }
-  .result .detail span { font-weight:600; color:var(--text) }
-
-  footer {
-    text-align: center;
-    padding: 40px 0 20px;
-    color: var(--sub);
-    font-size: .82rem;
-  }
-  footer a { color:var(--accent); text-decoration:none }
-
-  @media (max-width:600px) {
-    .container { padding:20px 12px 60px }
-    .card { padding:18px 16px }
-    header h1 { font-size:1.5rem }
-    .result .detail { flex-direction:column; gap:8px }
-  }
+:root{--bg:#f5f5f7;--card:#fff;--text:#1d1d1f;--t2:#86868b;--ac:#3a36e4;--al:#e8e7ff;--bd:#e8e8ed;--gr:#34c759;--rd:#ff3b30;--am:#ff9500;--gb:#eafdf2;--rb:#fff0f0;--ab:#fffaf0;--r:14px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+.cx{max-width:720px;margin:0 auto;padding:44px 24px 90px}
+.hero{text-align:center;padding:56px 0 40px}
+.hero h1{font-size:2.1rem;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+.hero .sub{margin-top:5px;font-size:.92rem;color:var(--t2);font-weight:400}
+.ps{position:sticky;top:0;z-index:20;background:var(--bg);padding:6px 0 16px}
+.pr{display:flex;align-items:center;gap:12px}
+.pt{flex:1;height:5px;background:#e4e4e9;border-radius:99px;overflow:hidden}
+.pf{height:100%;background:var(--ac);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1);width:0}
+.pl{font-size:.8rem;font-weight:500;color:var(--t2);white-space:nowrap;min-width:54px;text-align:right}
+.sh{font-size:.82rem;font-weight:600;color:var(--t2);letter-spacing:.05em;margin:34px 0 14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:22px 26px;margin-bottom:11px;transition:border-color .2s,box-shadow .2s;box-shadow:0 1px 2px rgba(0,0,0,.015)}
+.card:hover{border-color:#d2d2d7;box-shadow:0 2px 12px rgba(0,0,0,.035)}
+.card.ok{border-color:#8ce0a0;background:var(--gb)}
+.card.no{border-color:#ffa8a5;background:var(--rb)}
+.card.em{border-color:#ffcc80;background:var(--ab)}
+.qr{display:flex;gap:10px;align-items:flex-start;margin-bottom:13px}
+.qn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:#f0f0f5;color:var(--t2);font-size:.78rem;font-weight:600;flex-shrink:0;margin-top:1px}
+.qt{font-weight:500;font-size:.95rem;flex:1}
+.qb{font-size:.7rem;font-weight:600;padding:3px 10px;border-radius:99px;flex-shrink:0;margin-left:6px}
+.qb.sel{background:var(--al);color:var(--ac)}
+.qb.tf{background:#fff3db;color:#b07000}
+.ops{display:flex;flex-direction:column;gap:4px}
+.opt{display:flex;align-items:center;padding:10px 14px;border-radius:10px;border:1.5px solid var(--bd);cursor:pointer;transition:all .14s ease;font-size:.9rem;user-select:none;color:var(--text)}
+.opt:hover:not(.lk){border-color:#c4c4d0;background:#fafafc}
+.opt input{display:none}
+.opt .rg{width:17px;height:17px;border-radius:50%;border:2px solid #d1d1d6;margin-right:11px;flex-shrink:0;position:relative;transition:all .18s ease}
+.opt .rg::after{content:"";position:absolute;inset:3px;border-radius:50%;background:transparent;transition:all .18s ease}
+.opt.pk .rg{border-color:var(--ac)}
+.opt.pk .rg::after{background:var(--ac)}
+.opt.pk{border-color:var(--ac);background:#f8f7ff}
+.opt.lk{cursor:default;opacity:.7}
+.opt.mc{border-color:var(--gr)!important;background:var(--gb)!important}
+.opt.mc .rg{border-color:var(--gr)!important}
+.opt.mc .rg::after{background:var(--gr)!important}
+.opt.mw{border-color:var(--rd)!important;background:var(--rb)!important}
+.opt.mw .rg{border-color:var(--rd)!important}
+.opt.mw .rg::after{background:var(--rd)!important}
+.hint{margin-top:9px;padding:8px 14px;border-radius:10px;font-size:.84rem;font-weight:500;display:none}
+.hint.on{display:block}
+.hint.g{background:#d6fae2;color:#16783a}
+.hint.r{background:#ffe3e2;color:#b5221f}
+.hint.a{background:#ffedcc;color:#8b6200}
+.acts{text-align:center;margin-top:38px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:13px 38px;border:none;border-radius:12px;font-size:.94rem;font-weight:600;cursor:pointer;transition:all .2s ease;font-family:inherit}
+.btn.pri{background:var(--ac);color:#fff;box-shadow:0 2px 12px rgba(58,54,228,.3)}
+.btn.pri:hover{background:#2f2bdb;box-shadow:0 4px 18px rgba(58,54,228,.4);transform:translateY(-1px)}
+.btn.gh{background:var(--card);color:var(--text);border:1.5px solid var(--bd)}
+.btn.gh:hover{border-color:#b8b8c8;background:#f9f9fb}
+.btn+.btn{margin-left:10px}
+.result{text-align:center;background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:30px 28px;margin-bottom:22px;display:none;box-shadow:0 1px 3px rgba(0,0,0,.025)}
+.result.on{display:block;animation:fi .45s cubic-bezier(.4,0,.2,1)}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.result .big{font-size:3.4rem;font-weight:700;letter-spacing:-.03em;color:var(--ac);line-height:1}
+.result .gd{font-size:1.1rem;font-weight:600;margin-top:3px}
+.result .st{display:flex;justify-content:center;gap:26px;margin-top:12px;font-size:.86rem;color:var(--t2)}
+.result .st b{color:var(--text);font-weight:600}
+.foot{text-align:center;padding:36px 0 16px;color:#bcbcc4;font-size:.76rem}
+.foot a{color:var(--ac);text-decoration:none;font-weight:500}
+@media(max-width:640px){.cx{padding:24px 14px 80px}.card{padding:18px 16px}.hero{padding:32px 0 24px}.hero h1{font-size:1.5rem}.result .st{flex-wrap:wrap;gap:12px}}
 </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <h1>UML ÆÚÄ©Á·Ï°</h1>
-    <p>Ñ¡ÔñÌâ 19 µÀ &nbsp;¡¤&nbsp; ÅĞ¶ÏÌâ 13 µÀ &nbsp;¡¤&nbsp; ¹² 32 Ìâ</p>
-  </header>
-
-  <div class="progress-wrap">
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    <div class="progress-text">
-      <span id="answeredCount">ÒÑ´ğ 0 / 32</span>
-      <span id="progressPercent">0%</span>
-    </div>
-  </div>
-
-  <div id="resultPanel" class="result"></div>
-
-  <div id="questions"></div>
-
-  <div class="btn-wrap">
-    <button class="btn btn-primary" id="submitBtn" onclick="submit()">Ìá½»´ğ°¸</button>
-    <button class="btn btn-secondary" id="resetBtn" onclick="resetAll()" style="display:none">ÖØĞÂÁ·Ï°</button>
-  </div>
-
-  <footer>
-    <p>Made for UML Final Exam ¡¤ <a href="https://github.com/xiaodangjia105/uml-exam-practice" target="_blank">GitHub</a></p>
-  </footer>
+<div class="cx">
+<div class="hero"><h1>UML æœŸæœ«ç»ƒä¹ </h1><p class="sub">19 é“é€‰æ‹©é¢˜ &middot; 13 é“åˆ¤æ–­é¢˜ &middot; å…± 32 é¢˜</p></div>
+<div class="ps"><div class="pr"><div class="pt"><div class="pf" id="pf"></div></div><span class="pl" id="pl">0 / 32</span></div></div>
+<div id="rb" class="result"></div>
+<div class="sh">é€‰æ‹©é¢˜</div>
+<div class="card" id="c0"><div class="qr"><span class="qn">1</span><span class="qt">(  )æ˜¯ç³»ç»Ÿä¸­éµä»ä¸€ç»„æ¥å£ä¸”æä¾›å®ç°çš„ä¸€ä¸ªç‰©ç†ç‰©ä»¶ï¼Œé€šå¸¸æŒ‡å¼€å‘å’Œè¿è¡Œæ—¶çš„ç±»çš„ç‰©ç†å®ç°ã€‚</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o0_0" onclick="sel(0,0)"><input type="radio" name="g0" value="0"><span class="rg"></span>A. éƒ¨ç½²å›¾</label><label class="opt" id="o0_1" onclick="sel(0,1)"><input type="radio" name="g0" value="1"><span class="rg"></span>B. ç±»</label><label class="opt" id="o0_2" onclick="sel(0,2)"><input type="radio" name="g0" value="2"><span class="rg"></span>C. æ¥å£</label><label class="opt" id="o0_3" onclick="sel(0,3)"><input type="radio" name="g0" value="3"><span class="rg"></span>D. ç»„ä»¶</label></div><div class="hint" id="h0"></div></div>
+<div class="card" id="c1"><div class="qr"><span class="qn">2</span><span class="qt">é¡ºåºå›¾ä¸­ç”±ç±»è§’è‰²ã€ç”Ÿå‘½çº¿ã€æ¿€æ´»æ¡å’Œ(  )ç»„æˆã€‚</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o1_0" onclick="sel(1,0)"><input type="radio" name="g1" value="0"><span class="rg"></span>A. å…³ç³»</label><label class="opt" id="o1_1" onclick="sel(1,1)"><input type="radio" name="g1" value="1"><span class="rg"></span>B. æ¶ˆæ¯</label></div><div class="hint" id="h1"></div></div>
+<div class="card" id="c2"><div class="qr"><span class="qn">3</span><span class="qt">åé¦ˆå›¾å½¢çš„å¿…é€‰å»ºæ¨¡æ–¹å¼ä¸º(  )</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o2_0" onclick="sel(2,0)"><input type="radio" name="g2" value="0"><span class="rg"></span>A. çŠ¶æ€å›¾</label><label class="opt" id="o2_1" onclick="sel(2,1)"><input type="radio" name="g2" value="1"><span class="rg"></span>B. ç”¨ä¾‹å›¾</label><label class="opt" id="o2_2" onclick="sel(2,2)"><input type="radio" name="g2" value="2"><span class="rg"></span>C. æ´»åŠ¨å›¾</label><label class="opt" id="o2_3" onclick="sel(2,3)"><input type="radio" name="g2" value="3"><span class="rg"></span>D. ç±»å›¾</label></div><div class="hint" id="h2"></div></div>
+<div class="card" id="c3"><div class="qr"><span class="qn">4</span><span class="qt">ä¸‹åˆ—å“ªä¸ªä¸æ˜¯é¢å‘å¯¹è±¡ç¨‹åºè®¾è®¡çš„ä¸»è¦ç‰¹å¾ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o3_0" onclick="sel(3,0)"><input type="radio" name="g3" value="0"><span class="rg"></span>A. å°è£…</label><label class="opt" id="o3_1" onclick="sel(3,1)"><input type="radio" name="g3" value="1"><span class="rg"></span>B. å¤šæ€</label><label class="opt" id="o3_2" onclick="sel(3,2)"><input type="radio" name="g3" value="2"><span class="rg"></span>C. ç»§æ‰¿</label><label class="opt" id="o3_3" onclick="sel(3,3)"><input type="radio" name="g3" value="3"><span class="rg"></span>D. ç»“æ„</label></div><div class="hint" id="h3"></div></div>
+<div class="card" id="c4"><div class="qr"><span class="qn">5</span><span class="qt">åœ¨å»ºç«‹ç³»ç»Ÿç”¨ä¾‹æ¨¡å‹æ—¶ï¼Œä»¥ä¸‹å“ªä¸€é¡¹ä¿¡æ¯å¯¹æ‹Ÿå®šç³»ç»Ÿå‚æ•°æ²¡æœ‰ç”¨å¤„ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o4_0" onclick="sel(4,0)"><input type="radio" name="g4" value="0"><span class="rg"></span>A. è°æ˜¯ç³»ç»Ÿçš„é‡è¦ç”¨æˆ·ï¼Œä»–ä»¬ä¼šéšæ—¶ä½¿ç”¨ç³»ç»Ÿçš„é‡è¦åŠŸèƒ½</label><label class="opt" id="o4_1" onclick="sel(4,1)"><input type="radio" name="g4" value="1"><span class="rg"></span>B. è°æ¥ç®¡ç†ç»´æŠ¤ç³»ç»Ÿä»¥ä¿è¯ç³»ç»Ÿæ­£å¸¸è¿è¡Œ</label><label class="opt" id="o4_2" onclick="sel(4,2)"><input type="radio" name="g4" value="2"><span class="rg"></span>C. ç³»ç»Ÿçš„åŠŸèƒ½åœ°æ–¹å¦‚ä½•å»å®ç°</label><label class="opt" id="o4_3" onclick="sel(4,3)"><input type="radio" name="g4" value="3"><span class="rg"></span>D. ç³»ç»Ÿéœ€è¦ä¸å“ªäº›å…¶ä»–çš„ç³»ç»Ÿè¿›è¡Œäº¤äº’</label></div><div class="hint" id="h4"></div></div>
+<div class="card" id="c5"><div class="qr"><span class="qn">6</span><span class="qt">åœ¨UMLä¸­ï¼Œä»€ä¹ˆå›¾æ˜¾ç¤ºç»„å†…æ¥å£åä½œä»¥åŠå®ƒä»¬ä¹‹é—´çš„å…³ç³»ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o5_0" onclick="sel(5,0)"><input type="radio" name="g5" value="0"><span class="rg"></span>A. çŠ¶æ€å›¾</label><label class="opt" id="o5_1" onclick="sel(5,1)"><input type="radio" name="g5" value="1"><span class="rg"></span>B. ç±»å›¾</label><label class="opt" id="o5_2" onclick="sel(5,2)"><input type="radio" name="g5" value="2"><span class="rg"></span>C. ç”¨ä¾‹å›¾</label><label class="opt" id="o5_3" onclick="sel(5,3)"><input type="radio" name="g5" value="3"><span class="rg"></span>D. éƒ¨ç½²å›¾</label></div><div class="hint" id="h5"></div></div>
+<div class="card" id="c6"><div class="qr"><span class="qn">7</span><span class="qt">è½¯ä»¶éœ€æ±‚åŒ…æ‹¬å®šä¹‰ã€è½¯ä»¶è®¾è®¡ã€è½¯ä»¶æµ‹è¯•ã€è½¯ä»¶ç»´æŠ¤ç­‰é˜¶æ®µã€‚ä»¥ä¸‹å“ªä¸ªé˜¶æ®µä¸å±äºè½¯ä»¶éœ€æ±‚çš„èŒƒç•´ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o6_0" onclick="sel(6,0)"><input type="radio" name="g6" value="0"><span class="rg"></span>A. è½¯ä»¶éœ€æ±‚å®šä¹‰</label><label class="opt" id="o6_1" onclick="sel(6,1)"><input type="radio" name="g6" value="1"><span class="rg"></span>B. è½¯ä»¶è®¾è®¡</label><label class="opt" id="o6_2" onclick="sel(6,2)"><input type="radio" name="g6" value="2"><span class="rg"></span>C. è½¯ä»¶æµ‹è¯•</label><label class="opt" id="o6_3" onclick="sel(6,3)"><input type="radio" name="g6" value="3"><span class="rg"></span>D. è½¯ä»¶ç»´æŠ¤</label></div><div class="hint" id="h6"></div></div>
+<div class="card" id="c7"><div class="qr"><span class="qn">8</span><span class="qt">ä¸‹é¢å“ªä¸ªUMLå›¾ç”¨äºæè¿°ç³»ç»Ÿçš„ç¡¬ä»¶æ‹“æ‰‘ç»“æ„ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o7_0" onclick="sel(7,0)"><input type="radio" name="g7" value="0"><span class="rg"></span>A. ç±»å›¾</label><label class="opt" id="o7_1" onclick="sel(7,1)"><input type="radio" name="g7" value="1"><span class="rg"></span>B. éƒ¨ç½²å›¾</label><label class="opt" id="o7_2" onclick="sel(7,2)"><input type="radio" name="g7" value="2"><span class="rg"></span>C. çŠ¶æ€å›¾</label><label class="opt" id="o7_3" onclick="sel(7,3)"><input type="radio" name="g7" value="3"><span class="rg"></span>D. æ´»åŠ¨å›¾</label></div><div class="hint" id="h7"></div></div>
+<div class="card" id="c8"><div class="qr"><span class="qn">9</span><span class="qt">ä¸‹é¢å“ªä¸ªä¸å±äºUMLçš„é™æ€å›¾ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o8_0" onclick="sel(8,0)"><input type="radio" name="g8" value="0"><span class="rg"></span>A. çŠ¶æ€å›¾</label><label class="opt" id="o8_1" onclick="sel(8,1)"><input type="radio" name="g8" value="1"><span class="rg"></span>B. ç”¨ä¾‹å›¾</label><label class="opt" id="o8_2" onclick="sel(8,2)"><input type="radio" name="g8" value="2"><span class="rg"></span>C. å¯¹è±¡å›¾</label><label class="opt" id="o8_3" onclick="sel(8,3)"><input type="radio" name="g8" value="3"><span class="rg"></span>D. ç±»å›¾</label></div><div class="hint" id="h8"></div></div>
+<div class="card" id="c9"><div class="qr"><span class="qn">10</span><span class="qt">ä¸‹é¢å¯¹çŠ¶æ€å›¾æè¿°ä¸æ­£ç¡®çš„æ˜¯(  )</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o9_0" onclick="sel(9,0)"><input type="radio" name="g9" value="0"><span class="rg"></span>A. çŠ¶æ€å›¾é€šè¿‡å»ºç«‹ç±»å¯¹è±¡çš„ç”Ÿå‘½å‘¨æœŸæ¨¡å‹æ¥æè¿°å¯¹è±¡éšç€æ—¶é—´å˜åŒ–çš„åŠ¨æ€æ€§</label><label class="opt" id="o9_1" onclick="sel(9,1)"><input type="radio" name="g9" value="1"><span class="rg"></span>B. çŠ¶æ€å›¾å¯ç”¨äºæè¿°çŠ¶æ€å’ŒåŠ¨ä½œçš„é¡ºåºï¼Œä¸ä»…å¯ä»¥å±•ç°ä¸€ä¸ªå¯¹è±¡æ‹¥æœ‰çš„çŠ¶æ€ï¼Œè¿˜å¯ä»¥è¯´æ˜äº‹ä»¶å¦‚ä½•éšç€æ—¶é—´çš„æ¨ç§»æ¥å½±å“è¿™äº›çŠ¶æ€</label><label class="opt" id="o9_2" onclick="sel(9,2)"><input type="radio" name="g9" value="2"><span class="rg"></span>C. çŠ¶æ€å›¾çš„é‡è¦ç›®çš„æ˜¯æè¿°å¯¹è±¡åˆ›å»ºã€æ’¤é”€è¿‡ç¨‹ä¸­èµ„æºçš„ä¸åŒçŠ¶æ€ï¼Œæœ‰åŠ©äºå¼€å‘è€…æé«˜å¼€å‘æ•ˆç‡</label><label class="opt" id="o9_3" onclick="sel(9,3)"><input type="radio" name="g9" value="3"><span class="rg"></span>D. çŠ¶æ€å›¾æè¿°äº†ä¸€ä¸ªå®ä½“åŸºäºäº‹ä»¶ååº”çš„åŠ¨æ€è¡Œä¸ºï¼Œæ˜¾ç¤ºäº†è¯¥å®ä½“å¦‚ä½•æ ¹æ®å½“å‰æ‰€å¤„çš„çŠ¶æ€å¯¹ä¸åŒçš„äº‹ä»¶åšå‡ºååº”</label></div><div class="hint" id="h9"></div></div>
+<div class="card" id="c10"><div class="qr"><span class="qn">11</span><span class="qt">UMLä¸­ç±»é€šå¸¸åˆ†ä¸ºä¸‰ç§ï¼Œä¸‹é¢å“ªä¸€ä¸ªä¸æ˜¯å…¶ä¸­ä¹‹ä¸€ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o10_0" onclick="sel(10,0)"><input type="radio" name="g10" value="0"><span class="rg"></span>A. å®ä½“ç±»</label><label class="opt" id="o10_1" onclick="sel(10,1)"><input type="radio" name="g10" value="1"><span class="rg"></span>B. æŠ½è±¡ç±»</label><label class="opt" id="o10_2" onclick="sel(10,2)"><input type="radio" name="g10" value="2"><span class="rg"></span>C. æ§åˆ¶ç±»</label><label class="opt" id="o10_3" onclick="sel(10,3)"><input type="radio" name="g10" value="3"><span class="rg"></span>D. è¾¹ç•Œç±»</label></div><div class="hint" id="h10"></div></div>
+<div class="card" id="c11"><div class="qr"><span class="qn">12</span><span class="qt">UMLå»ºæ¨¡å·¥å…·çš„ä¸»è¦ä½œç”¨æ˜¯ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o11_0" onclick="sel(11,0)"><input type="radio" name="g11" value="0"><span class="rg"></span>A. ç¼–å†™ç¨‹åºä»£ç </label><label class="opt" id="o11_1" onclick="sel(11,1)"><input type="radio" name="g11" value="1"><span class="rg"></span>B. ç»˜åˆ¶ç³»ç»Ÿæ¶æ„å›¾</label><label class="opt" id="o11_2" onclick="sel(11,2)"><input type="radio" name="g11" value="2"><span class="rg"></span>C. æµ‹è¯•ç³»ç»ŸåŠŸèƒ½</label><label class="opt" id="o11_3" onclick="sel(11,3)"><input type="radio" name="g11" value="3"><span class="rg"></span>D. ç®¡ç†é¡¹ç›®è¿›åº¦</label></div><div class="hint" id="h11"></div></div>
+<div class="card" id="c12"><div class="qr"><span class="qn">13</span><span class="qt">UMLå»ºæ¨¡å·¥å…·ä¸­ç”¨äºæè¿°ç³»ç»ŸåŠ¨æ€è¡Œä¸ºçš„å›¾æ˜¯ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o12_0" onclick="sel(12,0)"><input type="radio" name="g12" value="0"><span class="rg"></span>A. ç±»å›¾</label><label class="opt" id="o12_1" onclick="sel(12,1)"><input type="radio" name="g12" value="1"><span class="rg"></span>B. ç”¨ä¾‹å›¾</label><label class="opt" id="o12_2" onclick="sel(12,2)"><input type="radio" name="g12" value="2"><span class="rg"></span>C. æ—¶åºå›¾</label><label class="opt" id="o12_3" onclick="sel(12,3)"><input type="radio" name="g12" value="3"><span class="rg"></span>D. ç»„ä»¶å›¾</label></div><div class="hint" id="h12"></div></div>
+<div class="card" id="c13"><div class="qr"><span class="qn">14</span><span class="qt">UMLä¸­ç”¨äºæŠŠå…ƒç´ ç»„ç»‡æˆç»„çš„é€šç”¨æœºåˆ¶æ˜¯ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o13_0" onclick="sel(13,0)"><input type="radio" name="g13" value="0"><span class="rg"></span>A. ç±»</label><label class="opt" id="o13_1" onclick="sel(13,1)"><input type="radio" name="g13" value="1"><span class="rg"></span>B. æ¥å£</label><label class="opt" id="o13_2" onclick="sel(13,2)"><input type="radio" name="g13" value="2"><span class="rg"></span>C. åŒ…</label><label class="opt" id="o13_3" onclick="sel(13,3)"><input type="radio" name="g13" value="3"><span class="rg"></span>D. ç»„ä»¶</label></div><div class="hint" id="h13"></div></div>
+<div class="card" id="c14"><div class="qr"><span class="qn">15</span><span class="qt">ç»„ä»¶å›¾å±•ç°äº†ç»„ä»¶ä¹‹é—´çš„ä¾èµ–å…³ç³»ï¼Œå®ƒä¸“æ³¨äºç³»ç»Ÿçš„______å®ç°è§†å›¾ã€‚</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o14_0" onclick="sel(14,0)"><input type="radio" name="g14" value="0"><span class="rg"></span>A. åŠ¨æ€</label><label class="opt" id="o14_1" onclick="sel(14,1)"><input type="radio" name="g14" value="1"><span class="rg"></span>B. é™æ€</label><label class="opt" id="o14_2" onclick="sel(14,2)"><input type="radio" name="g14" value="2"><span class="rg"></span>C. åŸºç¡€</label><label class="opt" id="o14_3" onclick="sel(14,3)"><input type="radio" name="g14" value="3"><span class="rg"></span>D. å®ä½“</label></div><div class="hint" id="h14"></div></div>
+<div class="card" id="c15"><div class="qr"><span class="qn">16</span><span class="qt">ä¸‹åˆ—å“ªä¸€é¡¹ä¸æ˜¯å»ºæ¨¡çš„åŸºæœ¬åŸåˆ™ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o15_0" onclick="sel(15,0)"><input type="radio" name="g15" value="0"><span class="rg"></span>A. ä»”ç»†é€‰æ‹©æ¨¡å‹</label><label class="opt" id="o15_1" onclick="sel(15,1)"><input type="radio" name="g15" value="1"><span class="rg"></span>B. æ²¡æœ‰å•ä¸€æ¨¡å‹å¯ä»¥åœ¨æ‰€æœ‰æŠ½è±¡å±‚æ¬¡ä¸Šéƒ½é€‚ç”¨</label><label class="opt" id="o15_2" onclick="sel(15,2)"><input type="radio" name="g15" value="2"><span class="rg"></span>C. æ¨¡å‹è¦ä¸ç°å®ç›¸è”ç³»</label><label class="opt" id="o15_3" onclick="sel(15,3)"><input type="radio" name="g15" value="3"><span class="rg"></span>D. å¯¹ä¸€ä¸ªé‡è¦çš„ç³»ç»Ÿï¼Œç”¨ä¸€ä¸ªæ¨¡å‹å°±è¶³ä»¥è§£å†³æ‰€æœ‰é—®é¢˜</label></div><div class="hint" id="h15"></div></div>
+<div class="card" id="c16"><div class="qr"><span class="qn">17</span><span class="qt">UMLå»ºæ¨¡ä¸­çš„äº‹ç‰©åŒ…æ‹¬ç»“æ„äº‹ç‰©ã€åˆ†ç»„äº‹ç‰©ã€æ³¨é‡Šäº‹ç‰©å’Œä»€ä¹ˆäº‹ç‰©ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o16_0" onclick="sel(16,0)"><input type="radio" name="g16" value="0"><span class="rg"></span>A. å®ä½“äº‹ç‰©</label><label class="opt" id="o16_1" onclick="sel(16,1)"><input type="radio" name="g16" value="1"><span class="rg"></span>B. è¾¹ç•Œäº‹ç‰©</label><label class="opt" id="o16_2" onclick="sel(16,2)"><input type="radio" name="g16" value="2"><span class="rg"></span>C. è¡Œä¸ºäº‹ç‰©</label><label class="opt" id="o16_3" onclick="sel(16,3)"><input type="radio" name="g16" value="3"><span class="rg"></span>D. å…±åŒäº‹ç‰©</label></div><div class="hint" id="h16"></div></div>
+<div class="card" id="c17"><div class="qr"><span class="qn">18</span><span class="qt">UMLä¸­çš„å››ç§æ ¸å¿ƒå…³ç³»åŒ…æ‹¬æ³›åŒ–ã€å…³è”ã€ä¾èµ–å’Œä»€ä¹ˆï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o17_0" onclick="sel(17,0)"><input type="radio" name="g17" value="0"><span class="rg"></span>A. ç»§æ‰¿</label><label class="opt" id="o17_1" onclick="sel(17,1)"><input type="radio" name="g17" value="1"><span class="rg"></span>B. åˆä½œ</label><label class="opt" id="o17_2" onclick="sel(17,2)"><input type="radio" name="g17" value="2"><span class="rg"></span>C. å®ç°</label><label class="opt" id="o17_3" onclick="sel(17,3)"><input type="radio" name="g17" value="3"><span class="rg"></span>D. çªæ˜¾</label></div><div class="hint" id="h17"></div></div>
+<div class="card" id="c18"><div class="qr"><span class="qn">19</span><span class="qt">å¯¹äºUMLå»ºæ¨¡å·¥å…·æè¿°é”™è¯¯çš„æ˜¯ï¼Ÿ</span><span class="qb sel">å•é€‰</span></div><div class="ops"><label class="opt" id="o18_0" onclick="sel(18,0)"><input type="radio" name="g18" value="0"><span class="rg"></span>A. å»ºæ¨¡å·¥å…·å¯ä»¥å¸®åŠ©å¼€å‘è€…æ›´ç›´è§‚åœ°ç†è§£ç³»ç»Ÿç»“æ„</label><label class="opt" id="o18_1" onclick="sel(18,1)"><input type="radio" name="g18" value="1"><span class="rg"></span>B. å»ºæ¨¡å·¥å…·å¯ä»¥æå‡å›¢é˜Ÿçš„åä½œæ•ˆç‡</label><label class="opt" id="o18_2" onclick="sel(18,2)"><input type="radio" name="g18" value="2"><span class="rg"></span>C. å»ºæ¨¡å·¥å…·å¯ä»¥å¸®åŠ©å‘ç°è®¾è®¡ä¸­çš„ç®€å•ç¼ºé™·</label><label class="opt" id="o18_3" onclick="sel(18,3)"><input type="radio" name="g18" value="3"><span class="rg"></span>D. å»ºæ¨¡å·¥å…·å¯ä»¥ç›´æ¥ç”Ÿæˆå®Œæ•´å¯è¿è¡Œçš„ä»£ç </label></div><div class="hint" id="h18"></div></div>
+<div class="sh">åˆ¤æ–­é¢˜</div>
+<div class="card" id="c19"><div class="qr"><span class="qn">1</span><span class="qt">UMLä¸­ç±»çš„æ ‡å‡†ä¸‰åˆ†æ³•ï¼šå®ä½“ç±»ã€æ§åˆ¶ç±»ã€è¾¹ç•Œç±»ï¼ˆå¯¹åº”MVCæ¶æ„ï¼‰</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o19_1" onclick="sel(19,1)"><input type="radio" name="g19" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o19_0" onclick="sel(19,0)"><input type="radio" name="g19" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h19"></div></div>
+<div class="card" id="c20"><div class="qr"><span class="qn">2</span><span class="qt">å¯¹è±¡æ˜¯ç±»çš„å®ä¾‹åŒ–</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o20_1" onclick="sel(20,1)"><input type="radio" name="g20" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o20_0" onclick="sel(20,0)"><input type="radio" name="g20" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h20"></div></div>
+<div class="card" id="c21"><div class="qr"><span class="qn">3</span><span class="qt">çŠ¶æ€å›¾å¿…é¡»ä»¥åˆå§‹çŠ¶æ€ï¼ˆå¼€å§‹èŠ‚ç‚¹ï¼‰å¼€å§‹ï¼Œå¹¶ä¸”å¿…é¡»ä»¥ç»ˆæ­¢çŠ¶æ€ï¼ˆç»“æŸèŠ‚ç‚¹ï¼‰ç»“æŸã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o21_1" onclick="sel(21,1)"><input type="radio" name="g21" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o21_0" onclick="sel(21,0)"><input type="radio" name="g21" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h21"></div></div>
+<div class="card" id="c22"><div class="qr"><span class="qn">4</span><span class="qt">åœ¨UMLåŒ…å›¾ä¸­ï¼ŒåŒ…çš„è®¿é—®æƒé™æ§åˆ¶ä»…å½±å“åŒ…å†…å…ƒç´ çš„å¯è§æ€§ï¼Œä¸ä¼šå½±å“è·¨åŒ…å¼•ç”¨ã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o22_1" onclick="sel(22,1)"><input type="radio" name="g22" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o22_0" onclick="sel(22,0)"><input type="radio" name="g22" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h22"></div></div>
+<div class="card" id="c23"><div class="qr"><span class="qn">5</span><span class="qt">åœ¨UMLæ´»åŠ¨å›¾ä¸­ï¼Œæ³³é“ï¼ˆSwimlaneï¼‰ä¸»è¦ç”¨äºåŒºåˆ†ä¸åŒçš„å‚ä¸è€…å’ŒèŒè´£ã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o23_1" onclick="sel(23,1)"><input type="radio" name="g23" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o23_0" onclick="sel(23,0)"><input type="radio" name="g23" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h23"></div></div>
+<div class="card" id="c24"><div class="qr"><span class="qn">6</span><span class="qt">çŠ¶æ€å›¾ä¸»è¦æè¿°ä¸€ä¸ªå¯¹è±¡åœ¨å…¶ç”Ÿå‘½å‘¨æœŸå†…ï¼Œéšç€æ—¶é—´æ¨ç§»å› äº‹ä»¶é©±åŠ¨è€Œå‘ç”Ÿçš„çŠ¶æ€å˜åŒ–ã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o24_1" onclick="sel(24,1)"><input type="radio" name="g24" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o24_0" onclick="sel(24,0)"><input type="radio" name="g24" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h24"></div></div>
+<div class="card" id="c25"><div class="qr"><span class="qn">7</span><span class="qt">éƒ¨ç½²å›¾ç”¨äºæè¿°ç³»ç»Ÿçš„ç¡¬ä»¶ç»“æ„ä»¥åŠè½¯ä»¶ç»„ä»¶åœ¨ç¡¬ä»¶èŠ‚ç‚¹ä¸Šçš„åˆ†å¸ƒæƒ…å†µã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o25_1" onclick="sel(25,1)"><input type="radio" name="g25" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o25_0" onclick="sel(25,0)"><input type="radio" name="g25" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h25"></div></div>
+<div class="card" id="c26"><div class="qr"><span class="qn">8</span><span class="qt">åœ¨ç±»å›¾ä¸­ï¼Œç»„åˆå’Œèšåˆæ˜¯ä¸¤ç§ç‰¹æ®Šçš„å…³è”å…³ç³»ï¼Œç»„åˆå…³ç³»æ¯”èšåˆå…³ç³»æ›´å¼ºã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o26_1" onclick="sel(26,1)"><input type="radio" name="g26" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o26_0" onclick="sel(26,0)"><input type="radio" name="g26" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h26"></div></div>
+<div class="card" id="c27"><div class="qr"><span class="qn">9</span><span class="qt">åœ¨é¡ºåºå›¾å½“ä¸­ï¼Œæ¶ˆæ¯åªèƒ½æ˜¯åŒæ­¥çš„ï¼Œä¸èƒ½æ˜¯å¼‚æ­¥çš„ã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o27_1" onclick="sel(27,1)"><input type="radio" name="g27" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o27_0" onclick="sel(27,0)"><input type="radio" name="g27" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h27"></div></div>
+<div class="card" id="c28"><div class="qr"><span class="qn">10</span><span class="qt">UMLæ˜¯ä¸€ç§å»ºæ¨¡è¯­è¨€è€Œä¸æ˜¯ä¸€ç§è½¯ä»¶å¼€å‘æ–¹æ³•ã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o28_1" onclick="sel(28,1)"><input type="radio" name="g28" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o28_0" onclick="sel(28,0)"><input type="radio" name="g28" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h28"></div></div>
+<div class="card" id="c29"><div class="qr"><span class="qn">11</span><span class="qt">åä½œå›¾å’Œé¡ºåºå›¾åœ¨è¯­ä¹‰ä¸Šæ˜¯ç­‰ä»·çš„ï¼Œå¯ä»¥ç›¸äº’è½¬åŒ–ï¼Œä½†ä¾§é‡ç‚¹å’Œè¡¨ç°å½¢å¼ä¸åŒã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o29_1" onclick="sel(29,1)"><input type="radio" name="g29" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o29_0" onclick="sel(29,0)"><input type="radio" name="g29" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h29"></div></div>
+<div class="card" id="c30"><div class="qr"><span class="qn">12</span><span class="qt">åœ¨æ´»åŠ¨å›¾å½“ä¸­ç”¨äºè¡¨ç¤ºæµç¨‹èµ·ç‚¹çš„ç¬¦å·æ˜¯åˆå§‹èŠ‚ç‚¹ï¼ˆå®å¿ƒå°åœ†ç‚¹ï¼‰ã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o30_1" onclick="sel(30,1)"><input type="radio" name="g30" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o30_0" onclick="sel(30,0)"><input type="radio" name="g30" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h30"></div></div>
+<div class="card" id="c31"><div class="qr"><span class="qn">13</span><span class="qt">UMLçš„å››ç§æ ¸å¿ƒå…³ç³»æ˜¯æ³›åŒ–ã€å…³è”ã€ä¾èµ–å’Œç»§æ‰¿ï¼Œå®ƒä»¬åœ¨è¯­ä¹‰ä¸Šæ˜¯ä¸€è‡´çš„ã€‚</span><span class="qb tf">åˆ¤æ–­</span></div><div class="ops"><label class="opt" id="o31_1" onclick="sel(31,1)"><input type="radio" name="g31" value="1"><span class="rg"></span>âœ“ æ­£ç¡®</label><label class="opt" id="o31_0" onclick="sel(31,0)"><input type="radio" name="g31" value="0"><span class="rg"></span>âœ— é”™è¯¯</label></div><div class="hint" id="h31"></div></div>
+<div class="acts"><button class="btn pri" id="bs" onclick="go()">æäº¤ç­”æ¡ˆ</button><button class="btn gh" id="br" onclick="again()" style="display:none">é‡æ–°ç»ƒä¹ </button></div>
+<div class="foot">Made for UML Final Exam &middot; <a href="https://github.com/xiaodangjia105/uml-exam-practice" target="_blank">GitHub</a></div>
 </div>
-
 <script>
-var questions = [
-  // === Ñ¡ÔñÌâ ===
-  {type:'choice', q:'( )ÊÇÏµÍ³ÖĞ×ñ´ÓÒ»×é½Ó¿ÚÇÒÌá¹©ÊµÏÖµÄÒ»¸öÎïÀíÎï¼ş£¬Í¨³£Ö¸¿ª·¢ºÍÔËĞĞÊ±µÄÀàµÄÎïÀíÊµÏÖ¡£', opts:['²¿ÊğÍ¼','Àà','½Ó¿Ú','×é¼ş'], ans:3},
-  {type:'choice', q:'Ë³ĞòÍ¼ÖĞÓÉÀà½ÇÉ«¡¢ÉúÃüÏß¡¢¼¤»îÌõºÍ( )×é³É¡£', opts:['¹ØÏµ','ÏûÏ¢'], ans:1},
-  {type:'choice', q:'·´À¡Í¼ĞÎµÄ±ØÑ¡½¨Ä£·½Ê½Îª( )', opts:['×´Ì¬Í¼','ÓÃÀıÍ¼','»î¶¯Í¼','ÀàÍ¼'], ans:0},
-  {type:'choice', q:'ÏÂÁĞÄÄ¸ö²»ÊÇÃæÏò¶ÔÏó³ÌĞòÉè¼ÆµÄÖ÷ÒªÌØÕ÷£¿', opts:['·â×°','¶àÌ¬','¼Ì³Ğ','½á¹¹'], ans:3},
-  {type:'choice', q:'ÔÚ½¨Á¢ÏµÍ³ÓÃÀıÄ£ĞÍÊ±£¬ÒÔÏÂÄÄÒ»ÏîĞÅÏ¢¶ÔÄâ¶¨ÏµÍ³²ÎÊıÃ»ÓĞÓÃ´¦£¿', opts:['Ë­ÊÇÏµÍ³µÄÖØÒªÓÃ»§£¬ËûÃÇ»áËæÊ±Ê¹ÓÃÏµÍ³µÄÖØÒª¹¦ÄÜ','Ë­À´¹ÜÀíÎ¬»¤ÏµÍ³ÒÔ±£Ö¤ÏµÍ³Õı³£ÔËĞĞ','ÏµÍ³µÄ¹¦ÄÜµØ·½ÈçºÎÈ¥ÊµÏÖ','ÏµÍ³ĞèÒªÓëÄÄĞ©ÆäËûµÄÏµÍ³½øĞĞ½»»¥'], ans:2},
-  {type:'choice', q:'ÔÚUMLÖĞ£¬Ê²Ã´Í¼ÏÔÊ¾×éÄÚ½Ó¿ÚĞ­×÷ÒÔ¼°ËüÃÇÖ®¼äµÄ¹ØÏµ£¿', opts:['×´Ì¬Í¼','ÀàÍ¼','ÓÃÀıÍ¼','²¿ÊğÍ¼'], ans:1},
-  {type:'choice', q:'Èí¼şĞèÇó°üÀ¨¶¨Òå¡¢Èí¼şÉè¼Æ¡¢Èí¼ş²âÊÔ¡¢Èí¼şÎ¬»¤µÈ½×¶Î¡£ÒÔÏÂÄÄ¸ö½×¶Î²»ÊôÓÚÈí¼şĞèÇóµÄ·¶³ë£¿', opts:['Èí¼şĞèÇó¶¨Òå','Èí¼şÉè¼Æ','Èí¼ş²âÊÔ','Èí¼şÎ¬»¤'], ans:1},
-  {type:'choice', q:'ÏÂÃæÄÄ¸öUMLÍ¼ÓÃÓÚÃèÊöÏµÍ³µÄÓ²¼şÍØÆË½á¹¹£¿', opts:['ÀàÍ¼','²¿ÊğÍ¼','×´Ì¬Í¼','»î¶¯Í¼'], ans:1},
-  {type:'choice', q:'ÏÂÃæÄÄ¸ö²»ÊôÓÚUMLµÄ¾²Ì¬Í¼£¿', opts:['×´Ì¬Í¼','ÓÃÀıÍ¼','¶ÔÏóÍ¼','ÀàÍ¼'], ans:0},
-  {type:'choice', q:'ÏÂÃæ¶Ô×´Ì¬Í¼ÃèÊö²»ÕıÈ·µÄÊÇ( )', opts:['×´Ì¬Í¼Í¨¹ı½¨Á¢Àà¶ÔÏóµÄÉúÃüÖÜÆÚÄ£ĞÍÀ´ÃèÊö¶ÔÏóËæ×ÅÊ±¼ä±ä»¯µÄ¶¯Ì¬ĞÔ','×´Ì¬Í¼¿ÉÓÃÓÚÃèÊö×´Ì¬ºÍ¶¯×÷µÄË³Ğò£¬²»½ö¿ÉÒÔÕ¹ÏÖÒ»¸ö¶ÔÏóÓµÓĞµÄ×´Ì¬£¬»¹¿ÉÒÔËµÃ÷ÊÂ¼şÈçºÎËæ×ÅÊ±¼äµÄÍÆÒÆÀ´Ó°ÏìÕâĞ©×´Ì¬','×´Ì¬Í¼µÄÖØÒªÄ¿µÄÊÇÃèÊö¶ÔÏó´´½¨¡¢³·Ïú¹ı³ÌÖĞ×ÊÔ´µÄ²»Í¬×´Ì¬£¬ÓĞÖúÓÚ¿ª·¢ÕßÌá¸ß¿ª·¢Ğ§ÂÊ','×´Ì¬Í¼ÃèÊöÁËÒ»¸öÊµÌå»ùÓÚÊÂ¼ş·´Ó¦µÄ¶¯Ì¬ĞĞÎª£¬ÏÔÊ¾ÁË¸ÃÊµÌåÈçºÎ¸ù¾İµ±Ç°Ëù´¦µÄ×´Ì¬¶Ô²»Í¬µÄÊÂ¼ş×ö³ö·´Ó¦'], ans:2},
-  {type:'choice', q:'UMLÖĞÀàÍ¨³£·ÖÎªÈıÖÖ£¬ÏÂÃæÄÄÒ»¸ö²»ÊÇÆäÖĞÖ®Ò»£¿', opts:['ÊµÌåÀà','³éÏóÀà','¿ØÖÆÀà','±ß½çÀà'], ans:1},
-  {type:'choice', q:'UML½¨Ä£¹¤¾ßµÄÖ÷Òª×÷ÓÃÊÇ£¿', opts:['±àĞ´³ÌĞò´úÂë','»æÖÆÏµÍ³¼Ü¹¹Í¼','²âÊÔÏµÍ³¹¦ÄÜ','¹ÜÀíÏîÄ¿½ø¶È'], ans:1},
-  {type:'choice', q:'UML½¨Ä£¹¤¾ßÖĞÓÃÓÚÃèÊöÏµÍ³¶¯Ì¬ĞĞÎªµÄÍ¼ÊÇ£¿', opts:['ÀàÍ¼','ÓÃÀıÍ¼','Ê±ĞòÍ¼','×é¼şÍ¼'], ans:2},
-  {type:'choice', q:'UMLÖĞÓÃÓÚ°ÑÔªËØ×éÖ¯³É×éµÄÍ¨ÓÃ»úÖÆÊÇ£¿', opts:['Àà','½Ó¿Ú','°ü','×é¼ş'], ans:2},
-  {type:'choice', q:'×é¼şÍ¼Õ¹ÏÖÁË×é¼şÖ®¼äµÄÒÀÀµ¹ØÏµ£¬Ëü×¨×¢ÓÚÏµÍ³µÄ______ÊµÏÖÊÓÍ¼¡£', opts:['¶¯Ì¬','¾²Ì¬','»ù´¡','ÊµÌå'], ans:1},
-  {type:'choice', q:'ÏÂÁĞÄÄÒ»Ïî²»ÊÇ½¨Ä£µÄ»ù±¾Ô­Ôò£¿', opts:['×ĞÏ¸Ñ¡ÔñÄ£ĞÍ','Ã»ÓĞµ¥Ò»Ä£ĞÍ¿ÉÒÔÔÚËùÓĞ³éÏó²ã´ÎÉÏ¶¼ÊÊÓÃ','Ä£ĞÍÒªÓëÏÖÊµÏàÁªÏµ','¶ÔÒ»¸öÖØÒªµÄÏµÍ³£¬ÓÃÒ»¸öÄ£ĞÍ¾Í×ãÒÔ½â¾öËùÓĞÎÊÌâ'], ans:3},
-  {type:'choice', q:'UML½¨Ä£ÖĞµÄÊÂÎï°üÀ¨½á¹¹ÊÂÎï¡¢·Ö×éÊÂÎï¡¢×¢ÊÍÊÂÎïºÍÊ²Ã´ÊÂÎï£¿', opts:['ÊµÌåÊÂÎï','±ß½çÊÂÎï','ĞĞÎªÊÂÎï','¹²Í¬ÊÂÎï'], ans:2},
-  {type:'choice', q:'UMLÖĞµÄËÄÖÖºËĞÄ¹ØÏµ°üÀ¨·º»¯¡¢¹ØÁª¡¢ÒÀÀµºÍÊ²Ã´£¿', opts:['¼Ì³Ğ','ºÏ×÷','ÊµÏÖ','Í»ÏÔ'], ans:2},
-  {type:'choice', q:'¶ÔÓÚUML½¨Ä£¹¤¾ßÃèÊö´íÎóµÄÊÇ£¿', opts:['½¨Ä£¹¤¾ß¿ÉÒÔ°ïÖú¿ª·¢Õß¸üÖ±¹ÛµØÀí½âÏµÍ³½á¹¹','½¨Ä£¹¤¾ß¿ÉÒÔÌáÉıÍÅ¶ÓµÄĞ­×÷Ğ§ÂÊ','½¨Ä£¹¤¾ß¿ÉÒÔ°ïÖú·¢ÏÖÉè¼ÆÖĞµÄ¼òµ¥È±Ïİ','½¨Ä£¹¤¾ß¿ÉÒÔÖ±½ÓÉú³ÉÍêÕû¿ÉÔËĞĞµÄ´úÂë'], ans:3},
 
-  // === ÅĞ¶ÏÌâ ===
-  {type:'tf', q:'UMLÖĞÀàµÄ±ê×¼Èı·Ö·¨£ºÊµÌåÀà¡¢¿ØÖÆÀà¡¢±ß½çÀà£¨¶ÔÓ¦MVC¼Ü¹¹£©', ans:1},
-  {type:'tf', q:'¶ÔÏóÊÇÀàµÄÊµÀı»¯', ans:1},
-  {type:'tf', q:'×´Ì¬Í¼±ØĞëÒÔ³õÊ¼×´Ì¬£¨¿ªÊ¼½Úµã£©¿ªÊ¼£¬²¢ÇÒ±ØĞëÒÔÖÕÖ¹×´Ì¬£¨½áÊø½Úµã£©½áÊø¡£', ans:0},
-  {type:'tf', q:'ÔÚUML°üÍ¼ÖĞ£¬°üµÄ·ÃÎÊÈ¨ÏŞ¿ØÖÆ½öÓ°Ïì°üÄÚÔªËØµÄ¿É¼ûĞÔ£¬²»»áÓ°Ïì¿ç°üÒıÓÃ¡£', ans:0},
-  {type:'tf', q:'ÔÚUML»î¶¯Í¼ÖĞ£¬Ó¾µÀ£¨Swimlane£©Ö÷ÒªÓÃÓÚÇø·Ö²»Í¬µÄ²ÎÓëÕßºÍÖ°Ôğ¡£', ans:1},
-  {type:'tf', q:'×´Ì¬Í¼Ö÷ÒªÃèÊöÒ»¸ö¶ÔÏóÔÚÆäÉúÃüÖÜÆÚÄÚ£¬Ëæ×ÅÊ±¼äÍÆÒÆÒòÊÂ¼şÇı¶¯¶ø·¢ÉúµÄ×´Ì¬±ä»¯¡£', ans:1},
-  {type:'tf', q:'²¿ÊğÍ¼ÓÃÓÚÃèÊöÏµÍ³µÄÓ²¼ş½á¹¹ÒÔ¼°Èí¼ş×é¼şÔÚÓ²¼ş½ÚµãÉÏµÄ·Ö²¼Çé¿ö¡£', ans:1},
-  {type:'tf', q:'ÔÚÀàÍ¼ÖĞ£¬×éºÏºÍ¾ÛºÏÊÇÁ½ÖÖÌØÊâµÄ¹ØÁª¹ØÏµ£¬×éºÏ¹ØÏµ±È¾ÛºÏ¹ØÏµ¸üÇ¿¡£', ans:1},
-  {type:'tf', q:'ÔÚË³ĞòÍ¼µ±ÖĞ£¬ÏûÏ¢Ö»ÄÜÊÇÍ¬²½µÄ£¬²»ÄÜÊÇÒì²½µÄ¡£', ans:0},
-  {type:'tf', q:'UMLÊÇÒ»ÖÖ½¨Ä£ÓïÑÔ¶ø²»ÊÇÒ»ÖÖÈí¼ş¿ª·¢·½·¨¡£', ans:1},
-  {type:'tf', q:'Ğ­×÷Í¼ºÍË³ĞòÍ¼ÔÚÓïÒåÉÏÊÇµÈ¼ÛµÄ£¬¿ÉÒÔÏà»¥×ª»¯£¬µ«²àÖØµãºÍ±íÏÖĞÎÊ½²»Í¬¡£', ans:1},
-  {type:'tf', q:'ÔÚ»î¶¯Í¼µ±ÖĞÓÃÓÚ±íÊ¾Á÷³ÌÆğµãµÄ·ûºÅÊÇ³õÊ¼½Úµã£¨ÊµĞÄĞ¡Ô²µã£©¡£', ans:1},
-  {type:'tf', q:'UMLµÄËÄÖÖºËĞÄ¹ØÏµÊÇ·º»¯¡¢¹ØÁª¡¢ÒÀÀµºÍ¼Ì³Ğ£¬ËüÃÇÔÚÓïÒåÉÏÊÇÒ»ÖÂµÄ¡£', ans:0}
-];
+var Q = [{"t": "c", "q": "(  )æ˜¯ç³»ç»Ÿä¸­éµä»ä¸€ç»„æ¥å£ä¸”æä¾›å®ç°çš„ä¸€ä¸ªç‰©ç†ç‰©ä»¶ï¼Œé€šå¸¸æŒ‡å¼€å‘å’Œè¿è¡Œæ—¶çš„ç±»çš„ç‰©ç†å®ç°ã€‚", "o": ["éƒ¨ç½²å›¾", "ç±»", "æ¥å£", "ç»„ä»¶"], "a": 3}, {"t": "c", "q": "é¡ºåºå›¾ä¸­ç”±ç±»è§’è‰²ã€ç”Ÿå‘½çº¿ã€æ¿€æ´»æ¡å’Œ(  )ç»„æˆã€‚", "o": ["å…³ç³»", "æ¶ˆæ¯"], "a": 1}, {"t": "c", "q": "åé¦ˆå›¾å½¢çš„å¿…é€‰å»ºæ¨¡æ–¹å¼ä¸º(  )", "o": ["çŠ¶æ€å›¾", "ç”¨ä¾‹å›¾", "æ´»åŠ¨å›¾", "ç±»å›¾"], "a": 0}, {"t": "c", "q": "ä¸‹åˆ—å“ªä¸ªä¸æ˜¯é¢å‘å¯¹è±¡ç¨‹åºè®¾è®¡çš„ä¸»è¦ç‰¹å¾ï¼Ÿ", "o": ["å°è£…", "å¤šæ€", "ç»§æ‰¿", "ç»“æ„"], "a": 3}, {"t": "c", "q": "åœ¨å»ºç«‹ç³»ç»Ÿç”¨ä¾‹æ¨¡å‹æ—¶ï¼Œä»¥ä¸‹å“ªä¸€é¡¹ä¿¡æ¯å¯¹æ‹Ÿå®šç³»ç»Ÿå‚æ•°æ²¡æœ‰ç”¨å¤„ï¼Ÿ", "o": ["è°æ˜¯ç³»ç»Ÿçš„é‡è¦ç”¨æˆ·ï¼Œä»–ä»¬ä¼šéšæ—¶ä½¿ç”¨ç³»ç»Ÿçš„é‡è¦åŠŸèƒ½", "è°æ¥ç®¡ç†ç»´æŠ¤ç³»ç»Ÿä»¥ä¿è¯ç³»ç»Ÿæ­£å¸¸è¿è¡Œ", "ç³»ç»Ÿçš„åŠŸèƒ½åœ°æ–¹å¦‚ä½•å»å®ç°", "ç³»ç»Ÿéœ€è¦ä¸å“ªäº›å…¶ä»–çš„ç³»ç»Ÿè¿›è¡Œäº¤äº’"], "a": 2}, {"t": "c", "q": "åœ¨UMLä¸­ï¼Œä»€ä¹ˆå›¾æ˜¾ç¤ºç»„å†…æ¥å£åä½œä»¥åŠå®ƒä»¬ä¹‹é—´çš„å…³ç³»ï¼Ÿ", "o": ["çŠ¶æ€å›¾", "ç±»å›¾", "ç”¨ä¾‹å›¾", "éƒ¨ç½²å›¾"], "a": 1}, {"t": "c", "q": "è½¯ä»¶éœ€æ±‚åŒ…æ‹¬å®šä¹‰ã€è½¯ä»¶è®¾è®¡ã€è½¯ä»¶æµ‹è¯•ã€è½¯ä»¶ç»´æŠ¤ç­‰é˜¶æ®µã€‚ä»¥ä¸‹å“ªä¸ªé˜¶æ®µä¸å±äºè½¯ä»¶éœ€æ±‚çš„èŒƒç•´ï¼Ÿ", "o": ["è½¯ä»¶éœ€æ±‚å®šä¹‰", "è½¯ä»¶è®¾è®¡", "è½¯ä»¶æµ‹è¯•", "è½¯ä»¶ç»´æŠ¤"], "a": 1}, {"t": "c", "q": "ä¸‹é¢å“ªä¸ªUMLå›¾ç”¨äºæè¿°ç³»ç»Ÿçš„ç¡¬ä»¶æ‹“æ‰‘ç»“æ„ï¼Ÿ", "o": ["ç±»å›¾", "éƒ¨ç½²å›¾", "çŠ¶æ€å›¾", "æ´»åŠ¨å›¾"], "a": 1}, {"t": "c", "q": "ä¸‹é¢å“ªä¸ªä¸å±äºUMLçš„é™æ€å›¾ï¼Ÿ", "o": ["çŠ¶æ€å›¾", "ç”¨ä¾‹å›¾", "å¯¹è±¡å›¾", "ç±»å›¾"], "a": 0}, {"t": "c", "q": "ä¸‹é¢å¯¹çŠ¶æ€å›¾æè¿°ä¸æ­£ç¡®çš„æ˜¯(  )", "o": ["çŠ¶æ€å›¾é€šè¿‡å»ºç«‹ç±»å¯¹è±¡çš„ç”Ÿå‘½å‘¨æœŸæ¨¡å‹æ¥æè¿°å¯¹è±¡éšç€æ—¶é—´å˜åŒ–çš„åŠ¨æ€æ€§", "çŠ¶æ€å›¾å¯ç”¨äºæè¿°çŠ¶æ€å’ŒåŠ¨ä½œçš„é¡ºåºï¼Œä¸ä»…å¯ä»¥å±•ç°ä¸€ä¸ªå¯¹è±¡æ‹¥æœ‰çš„çŠ¶æ€ï¼Œè¿˜å¯ä»¥è¯´æ˜äº‹ä»¶å¦‚ä½•éšç€æ—¶é—´çš„æ¨ç§»æ¥å½±å“è¿™äº›çŠ¶æ€", "çŠ¶æ€å›¾çš„é‡è¦ç›®çš„æ˜¯æè¿°å¯¹è±¡åˆ›å»ºã€æ’¤é”€è¿‡ç¨‹ä¸­èµ„æºçš„ä¸åŒçŠ¶æ€ï¼Œæœ‰åŠ©äºå¼€å‘è€…æé«˜å¼€å‘æ•ˆç‡", "çŠ¶æ€å›¾æè¿°äº†ä¸€ä¸ªå®ä½“åŸºäºäº‹ä»¶ååº”çš„åŠ¨æ€è¡Œä¸ºï¼Œæ˜¾ç¤ºäº†è¯¥å®ä½“å¦‚ä½•æ ¹æ®å½“å‰æ‰€å¤„çš„çŠ¶æ€å¯¹ä¸åŒçš„äº‹ä»¶åšå‡ºååº”"], "a": 2}, {"t": "c", "q": "UMLä¸­ç±»é€šå¸¸åˆ†ä¸ºä¸‰ç§ï¼Œä¸‹é¢å“ªä¸€ä¸ªä¸æ˜¯å…¶ä¸­ä¹‹ä¸€ï¼Ÿ", "o": ["å®ä½“ç±»", "æŠ½è±¡ç±»", "æ§åˆ¶ç±»", "è¾¹ç•Œç±»"], "a": 1}, {"t": "c", "q": "UMLå»ºæ¨¡å·¥å…·çš„ä¸»è¦ä½œç”¨æ˜¯ï¼Ÿ", "o": ["ç¼–å†™ç¨‹åºä»£ç ", "ç»˜åˆ¶ç³»ç»Ÿæ¶æ„å›¾", "æµ‹è¯•ç³»ç»ŸåŠŸèƒ½", "ç®¡ç†é¡¹ç›®è¿›åº¦"], "a": 1}, {"t": "c", "q": "UMLå»ºæ¨¡å·¥å…·ä¸­ç”¨äºæè¿°ç³»ç»ŸåŠ¨æ€è¡Œä¸ºçš„å›¾æ˜¯ï¼Ÿ", "o": ["ç±»å›¾", "ç”¨ä¾‹å›¾", "æ—¶åºå›¾", "ç»„ä»¶å›¾"], "a": 2}, {"t": "c", "q": "UMLä¸­ç”¨äºæŠŠå…ƒç´ ç»„ç»‡æˆç»„çš„é€šç”¨æœºåˆ¶æ˜¯ï¼Ÿ", "o": ["ç±»", "æ¥å£", "åŒ…", "ç»„ä»¶"], "a": 2}, {"t": "c", "q": "ç»„ä»¶å›¾å±•ç°äº†ç»„ä»¶ä¹‹é—´çš„ä¾èµ–å…³ç³»ï¼Œå®ƒä¸“æ³¨äºç³»ç»Ÿçš„______å®ç°è§†å›¾ã€‚", "o": ["åŠ¨æ€", "é™æ€", "åŸºç¡€", "å®ä½“"], "a": 1}, {"t": "c", "q": "ä¸‹åˆ—å“ªä¸€é¡¹ä¸æ˜¯å»ºæ¨¡çš„åŸºæœ¬åŸåˆ™ï¼Ÿ", "o": ["ä»”ç»†é€‰æ‹©æ¨¡å‹", "æ²¡æœ‰å•ä¸€æ¨¡å‹å¯ä»¥åœ¨æ‰€æœ‰æŠ½è±¡å±‚æ¬¡ä¸Šéƒ½é€‚ç”¨", "æ¨¡å‹è¦ä¸ç°å®ç›¸è”ç³»", "å¯¹ä¸€ä¸ªé‡è¦çš„ç³»ç»Ÿï¼Œç”¨ä¸€ä¸ªæ¨¡å‹å°±è¶³ä»¥è§£å†³æ‰€æœ‰é—®é¢˜"], "a": 3}, {"t": "c", "q": "UMLå»ºæ¨¡ä¸­çš„äº‹ç‰©åŒ…æ‹¬ç»“æ„äº‹ç‰©ã€åˆ†ç»„äº‹ç‰©ã€æ³¨é‡Šäº‹ç‰©å’Œä»€ä¹ˆäº‹ç‰©ï¼Ÿ", "o": ["å®ä½“äº‹ç‰©", "è¾¹ç•Œäº‹ç‰©", "è¡Œä¸ºäº‹ç‰©", "å…±åŒäº‹ç‰©"], "a": 2}, {"t": "c", "q": "UMLä¸­çš„å››ç§æ ¸å¿ƒå…³ç³»åŒ…æ‹¬æ³›åŒ–ã€å…³è”ã€ä¾èµ–å’Œä»€ä¹ˆï¼Ÿ", "o": ["ç»§æ‰¿", "åˆä½œ", "å®ç°", "çªæ˜¾"], "a": 2}, {"t": "c", "q": "å¯¹äºUMLå»ºæ¨¡å·¥å…·æè¿°é”™è¯¯çš„æ˜¯ï¼Ÿ", "o": ["å»ºæ¨¡å·¥å…·å¯ä»¥å¸®åŠ©å¼€å‘è€…æ›´ç›´è§‚åœ°ç†è§£ç³»ç»Ÿç»“æ„", "å»ºæ¨¡å·¥å…·å¯ä»¥æå‡å›¢é˜Ÿçš„åä½œæ•ˆç‡", "å»ºæ¨¡å·¥å…·å¯ä»¥å¸®åŠ©å‘ç°è®¾è®¡ä¸­çš„ç®€å•ç¼ºé™·", "å»ºæ¨¡å·¥å…·å¯ä»¥ç›´æ¥ç”Ÿæˆå®Œæ•´å¯è¿è¡Œçš„ä»£ç "], "a": 3}, {"t": "tf", "q": "UMLä¸­ç±»çš„æ ‡å‡†ä¸‰åˆ†æ³•ï¼šå®ä½“ç±»ã€æ§åˆ¶ç±»ã€è¾¹ç•Œç±»ï¼ˆå¯¹åº”MVCæ¶æ„ï¼‰", "a": 1}, {"t": "tf", "q": "å¯¹è±¡æ˜¯ç±»çš„å®ä¾‹åŒ–", "a": 1}, {"t": "tf", "q": "çŠ¶æ€å›¾å¿…é¡»ä»¥åˆå§‹çŠ¶æ€ï¼ˆå¼€å§‹èŠ‚ç‚¹ï¼‰å¼€å§‹ï¼Œå¹¶ä¸”å¿…é¡»ä»¥ç»ˆæ­¢çŠ¶æ€ï¼ˆç»“æŸèŠ‚ç‚¹ï¼‰ç»“æŸã€‚", "a": 0}, {"t": "tf", "q": "åœ¨UMLåŒ…å›¾ä¸­ï¼ŒåŒ…çš„è®¿é—®æƒé™æ§åˆ¶ä»…å½±å“åŒ…å†…å…ƒç´ çš„å¯è§æ€§ï¼Œä¸ä¼šå½±å“è·¨åŒ…å¼•ç”¨ã€‚", "a": 0}, {"t": "tf", "q": "åœ¨UMLæ´»åŠ¨å›¾ä¸­ï¼Œæ³³é“ï¼ˆSwimlaneï¼‰ä¸»è¦ç”¨äºåŒºåˆ†ä¸åŒçš„å‚ä¸è€…å’ŒèŒè´£ã€‚", "a": 1}, {"t": "tf", "q": "çŠ¶æ€å›¾ä¸»è¦æè¿°ä¸€ä¸ªå¯¹è±¡åœ¨å…¶ç”Ÿå‘½å‘¨æœŸå†…ï¼Œéšç€æ—¶é—´æ¨ç§»å› äº‹ä»¶é©±åŠ¨è€Œå‘ç”Ÿçš„çŠ¶æ€å˜åŒ–ã€‚", "a": 1}, {"t": "tf", "q": "éƒ¨ç½²å›¾ç”¨äºæè¿°ç³»ç»Ÿçš„ç¡¬ä»¶ç»“æ„ä»¥åŠè½¯ä»¶ç»„ä»¶åœ¨ç¡¬ä»¶èŠ‚ç‚¹ä¸Šçš„åˆ†å¸ƒæƒ…å†µã€‚", "a": 1}, {"t": "tf", "q": "åœ¨ç±»å›¾ä¸­ï¼Œç»„åˆå’Œèšåˆæ˜¯ä¸¤ç§ç‰¹æ®Šçš„å…³è”å…³ç³»ï¼Œç»„åˆå…³ç³»æ¯”èšåˆå…³ç³»æ›´å¼ºã€‚", "a": 1}, {"t": "tf", "q": "åœ¨é¡ºåºå›¾å½“ä¸­ï¼Œæ¶ˆæ¯åªèƒ½æ˜¯åŒæ­¥çš„ï¼Œä¸èƒ½æ˜¯å¼‚æ­¥çš„ã€‚", "a": 0}, {"t": "tf", "q": "UMLæ˜¯ä¸€ç§å»ºæ¨¡è¯­è¨€è€Œä¸æ˜¯ä¸€ç§è½¯ä»¶å¼€å‘æ–¹æ³•ã€‚", "a": 1}, {"t": "tf", "q": "åä½œå›¾å’Œé¡ºåºå›¾åœ¨è¯­ä¹‰ä¸Šæ˜¯ç­‰ä»·çš„ï¼Œå¯ä»¥ç›¸äº’è½¬åŒ–ï¼Œä½†ä¾§é‡ç‚¹å’Œè¡¨ç°å½¢å¼ä¸åŒã€‚", "a": 1}, {"t": "tf", "q": "åœ¨æ´»åŠ¨å›¾å½“ä¸­ç”¨äºè¡¨ç¤ºæµç¨‹èµ·ç‚¹çš„ç¬¦å·æ˜¯åˆå§‹èŠ‚ç‚¹ï¼ˆå®å¿ƒå°åœ†ç‚¹ï¼‰ã€‚", "a": 1}, {"t": "tf", "q": "UMLçš„å››ç§æ ¸å¿ƒå…³ç³»æ˜¯æ³›åŒ–ã€å…³è”ã€ä¾èµ–å’Œç»§æ‰¿ï¼Œå®ƒä»¬åœ¨è¯­ä¹‰ä¸Šæ˜¯ä¸€è‡´çš„ã€‚", "a": 0}];
+var done = false;
+var pick = {};
+var L = "ABCDEFGH";
 
-var submitted = false;
-var userAnswers = {};
-
-function letter(i) { return String.fromCharCode(65+i) }
-
-function buildUI() {
-  var html = '';
-  var choiceIdx = 0;
-  var tfIdx = 0;
-  var globalIdx = 0;
-
-  html += '<div class="section-title">Ñ¡ÔñÌâ</div>';
-  for (var i=0; i<questions.length; i++) {
-    var q = questions[i];
-    if (q.type === 'choice') {
-      choiceIdx++;
-      html += '<div class="card" id="card'+i+'">';
-      html += '<div class="q-header"><span class="q-num">'+choiceIdx+'</span><span class="q-text">'+q.q+'</span><span class="q-type choice">µ¥Ñ¡</span></div>';
-      html += '<div class="options">';
-      for (var j=0; j<q.opts.length; j++) {
-        html += '<label class="option" id="opt'+i+'_'+j+'" onclick="selectOpt('+i+','+j+')">';
-        html += '<input type="radio" name="q'+i+'" value="'+j+'">';
-        html += '<span class="dot"></span>';
-        html += '<span>'+letter(j)+'. '+q.opts[j]+'</span>';
-        html += '</label>';
-      }
-      html += '</div>';
-      html += '<div class="feedback" id="fb'+i+'"></div>';
-      html += '</div>';
-    }
+function sel(i, j) {
+  if (done) return;
+  pick[i] = j;
+  var q = Q[i];
+  var range = q.t === "tf" ? [0,1] : q.o.map(function(_,k){return k});
+  for (var k = 0; k < range.length; k++) {
+    var el = document.getElementById("o"+i+"_"+range[k]);
+    if (el) el.classList.remove("pk");
   }
-
-  html += '<div class="section-title">ÅĞ¶ÏÌâ</div>';
-  var tfNum = 0;
-  for (var i=0; i<questions.length; i++) {
-    var q = questions[i];
-    if (q.type === 'tf') {
-      tfNum++;
-      html += '<div class="card" id="card'+i+'">';
-      html += '<div class="q-header"><span class="q-num">'+tfNum+'</span><span class="q-text">'+q.q+'</span><span class="q-type tf">ÅĞ¶Ï</span></div>';
-      html += '<div class="options">';
-      html += '<label class="option" id="opt'+i+'_1" onclick="selectOpt('+i+',1)">';
-      html += '<input type="radio" name="q'+i+'" value="1">';
-      html += '<span class="dot"></span><span>? ÕıÈ·</span></label>';
-      html += '<label class="option" id="opt'+i+'_0" onclick="selectOpt('+i+',0)">';
-      html += '<input type="radio" name="q'+i+'" value="0">';
-      html += '<span class="dot"></span><span>? ´íÎó</span></label>';
-      html += '</div>';
-      html += '<div class="feedback" id="fb'+i+'"></div>';
-      html += '</div>';
-    }
-  }
-
-  document.getElementById('questions').innerHTML = html;
+  var tgt = document.getElementById("o"+i+"_"+j);
+  if (tgt) tgt.classList.add("pk");
+  bar();
 }
 
-function selectOpt(qIdx, optIdx) {
-  if (submitted) return;
-  userAnswers[qIdx] = optIdx;
-
-  var q = questions[qIdx];
-  var opts = q.type==='tf' ? [0,1] : Object.keys(q.opts).map(Number);
-  for (var j=0; j<opts.length; j++) {
-    var oEl = document.getElementById('opt'+qIdx+'_'+opts[j]);
-    if (oEl) oEl.classList.remove('selected');
-  }
-  var sel = document.getElementById('opt'+qIdx+'_'+optIdx);
-  if (sel) sel.classList.add('selected');
-
-  updateProgress();
+function bar() {
+  var a = Object.keys(pick).length;
+  var p = Math.round(a / Q.length * 100);
+  document.getElementById("pf").style.width = p + "%";
+  document.getElementById("pl").textContent = a + " / " + Q.length;
 }
 
-function updateProgress() {
-  var answered = Object.keys(userAnswers).length;
-  var pct = Math.round(answered / questions.length * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('answeredCount').textContent = 'ÒÑ´ğ ' + answered + ' / ' + questions.length;
-  document.getElementById('progressPercent').textContent = pct + '%';
-}
-
-function submit() {
-  if (submitted) return;
-
-  var total = questions.length;
-  var correct = 0;
-  var unanswered = 0;
-
-  for (var i=0; i<total; i++) {
-    var q = questions[i];
-    var card = document.getElementById('card'+i);
-    var fb = document.getElementById('fb'+i);
-
-    if (userAnswers[i] === undefined) {
-      unanswered++;
-      card.classList.add('unanswered');
-      fb.className = 'feedback unanswered-fb show';
-      var correctLabel = q.type==='tf' ? (q.ans===1?'ÕıÈ·':'´íÎó') : letter(q.ans)+'. '+q.opts[q.ans];
-      fb.textContent = '? Î´×÷´ğ£¬ÕıÈ·´ğ°¸£º' + correctLabel;
-      continue;
-    }
-
-    if (userAnswers[i] === q.ans) {
-      correct++;
-      card.classList.add('correct');
-      fb.className = 'feedback correct-fb show';
-      fb.textContent = '? »Ø´ğÕıÈ·';
+function go() {
+  if (done) return;
+  var tot = Q.length, ok = 0, miss = 0;
+  for (var i = 0; i < tot; i++) {
+    var q = Q[i];
+    var card = document.getElementById("c"+i);
+    var hint = document.getElementById("h"+i);
+    if (pick[i] === undefined) {
+      miss++;
+      card.classList.add("em");
+      hint.className = "hint on a";
+      var cl = q.t === "tf" ? (q.a === 1 ? "æ­£ç¡®" : "é”™è¯¯") : L[q.a] + ". " + q.o[q.a];
+      hint.textContent = "âš  æœªä½œç­”ï¼Œæ­£ç¡®ç­”æ¡ˆï¼š" + cl;
+    } else if (pick[i] === q.a) {
+      ok++;
+      card.classList.add("ok");
+      hint.className = "hint on g";
+      hint.textContent = "âœ“ å›ç­”æ­£ç¡®";
     } else {
-      card.classList.add('wrong');
-      fb.className = 'feedback wrong-fb show';
-      var correctLabel = q.type==='tf' ? (q.ans===1?'ÕıÈ·':'´íÎó') : letter(q.ans)+'. '+q.opts[q.ans];
-      fb.textContent = '? ÕıÈ·´ğ°¸£º' + correctLabel;
+      card.classList.add("no");
+      hint.className = "hint on r";
+      var cl = q.t === "tf" ? (q.a === 1 ? "æ­£ç¡®" : "é”™è¯¯") : L[q.a] + ". " + q.o[q.a];
+      hint.textContent = "âœ— æ­£ç¡®ç­”æ¡ˆï¼š" + cl;
     }
   }
-
-  // Mark all options
-  for (var i=0; i<total; i++) {
-    var q = questions[i];
-    var optsCount = q.type==='tf' ? 2 : q.opts.length;
-    for (var j=0; j<optsCount; j++) {
-      var oEl = document.getElementById('opt'+i+'_'+j);
-      if (!oEl) continue;
-      oEl.classList.add('disabled');
-      if (j === q.ans) {
-        oEl.classList.add('correct-ans');
-      }
-      if (userAnswers[i] !== undefined && userAnswers[i] === j && userAnswers[i] !== q.ans) {
-        oEl.classList.add('wrong-ans');
-      }
+  for (var i = 0; i < tot; i++) {
+    var q = Q[i];
+    var n = q.t === "tf" ? 2 : q.o.length;
+    for (var j = 0; j < n; j++) {
+      var el = document.getElementById("o"+i+"_"+j);
+      if (!el) continue;
+      el.classList.add("lk");
+      if (j === q.a) el.classList.add("mc");
+      if (pick[i] !== undefined && pick[i] === j && pick[i] !== q.a) el.classList.add("mw");
     }
   }
-
-  submitted = true;
-
-  var score = Math.round(correct / total * 100);
-  var panel = document.getElementById('resultPanel');
-  var grade = score >= 90 ? '?? ÓÅĞã' : score >= 70 ? '?? Á¼ºÃ' : score >= 60 ? '?? ¼°¸ñ' : '?? ¼ÌĞø¼ÓÓÍ';
-  panel.innerHTML =
-    '<div class="score">' + score + ' ·Ö</div>' +
-    '<div style="font-size:1.2rem;margin-top:4px">' + grade + '</div>' +
-    '<div class="detail">' +
-      '<div>ÕıÈ· <span>' + correct + '</span></div>' +
-      '<div>´íÎó <span>' + (total - correct - unanswered) + '</span></div>' +
-      '<div>Î´´ğ <span>' + unanswered + '</span></div>' +
-      '<div>×Ü¼Æ <span>' + total + '</span></div>' +
-    '</div>';
-  panel.classList.add('show');
-
-  document.getElementById('submitBtn').style.display = 'none';
-  document.getElementById('resetBtn').style.display = 'inline-flex';
-
-  panel.scrollIntoView({behavior:'smooth',block:'center'});
+  done = true;
+  var score = Math.round(ok / tot * 100);
+  var grade = score >= 90 ? "ğŸ† ä¼˜ç§€" : score >= 70 ? "ğŸ‘ è‰¯å¥½" : score >= 60 ? "ğŸ“š åŠæ ¼" : "ğŸ’ª ç»§ç»­åŠ æ²¹";
+  var rb = document.getElementById("rb");
+  rb.innerHTML = '<div class="big">'+score+' åˆ†</div><div class="gd">'+grade+'</div><div class="st"><span>æ­£ç¡® <b>'+ok+'</b></span><span>é”™è¯¯ <b>'+(tot-ok-miss)+'</b></span><span>æœªç­” <b>'+miss+'</b></span><span>æ€»è®¡ <b>'+tot+'</b></span></div>';
+  rb.classList.add("on");
+  document.getElementById("bs").style.display = "none";
+  document.getElementById("br").style.display = "inline-flex";
+  rb.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
-function resetAll() {
-  submitted = false;
-  userAnswers = {};
-  for (var i=0; i<questions.length; i++) {
-    var card = document.getElementById('card'+i);
-    card.className = 'card';
-    var fb = document.getElementById('fb'+i);
-    fb.className = 'feedback';
-    fb.textContent = '';
-
-    var q = questions[i];
-    var optsCount = q.type==='tf' ? 2 : q.opts.length;
-    for (var j=0; j<optsCount; j++) {
-      var oEl = document.getElementById('opt'+i+'_'+j);
-      if (!oEl) continue;
-      oEl.classList.remove('selected','disabled','correct-ans','wrong-ans');
+function again() {
+  done = false;
+  pick = {};
+  for (var i = 0; i < Q.length; i++) {
+    var card = document.getElementById("c"+i);
+    card.className = "card";
+    var hint = document.getElementById("h"+i);
+    hint.className = "hint";
+    hint.textContent = "";
+    var q = Q[i];
+    var n = q.t === "tf" ? 2 : q.o.length;
+    for (var j = 0; j < n; j++) {
+      var el = document.getElementById("o"+i+"_"+j);
+      if (!el) continue;
+      el.classList.remove("pk","lk","mc","mw");
     }
   }
-
-  document.getElementById('resultPanel').classList.remove('show');
-  document.getElementById('resultPanel').innerHTML = '';
-  document.getElementById('submitBtn').style.display = 'inline-flex';
-  document.getElementById('resetBtn').style.display = 'none';
-  updateProgress();
-  window.scrollTo({top:0,behavior:'smooth'});
+  var rb = document.getElementById("rb");
+  rb.classList.remove("on");
+  rb.innerHTML = "";
+  document.getElementById("bs").style.display = "inline-flex";
+  document.getElementById("br").style.display = "none";
+  bar();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-buildUI();
 </script>
 </body>
 </html>
