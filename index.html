@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UML 期末练习</title>
+<title>UML ��ĩ��ϰ</title>
 <style>
   :root {
     --bg: #f8f9fa;
@@ -339,14 +339,14 @@
 <body>
 <div class="container">
   <header>
-    <h1>UML 期末练习</h1>
-    <p>选择题 19 道 &nbsp;·&nbsp; 判断题 13 道 &nbsp;·&nbsp; 共 32 题</p>
+    <h1>UML ��ĩ��ϰ</h1>
+    <p>ѡ���� 19 �� &nbsp;��&nbsp; �ж��� 13 �� &nbsp;��&nbsp; �� 32 ��</p>
   </header>
 
   <div class="progress-wrap">
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     <div class="progress-text">
-      <span id="answeredCount">已答 0 / 32</span>
+      <span id="answeredCount">�Ѵ� 0 / 32</span>
       <span id="progressPercent">0%</span>
     </div>
   </div>
@@ -356,52 +356,52 @@
   <div id="questions"></div>
 
   <div class="btn-wrap">
-    <button class="btn btn-primary" id="submitBtn" onclick="submit()">提交答案</button>
-    <button class="btn btn-secondary" id="resetBtn" onclick="resetAll()" style="display:none">重新练习</button>
+    <button class="btn btn-primary" id="submitBtn" onclick="submit()">�ύ��</button>
+    <button class="btn btn-secondary" id="resetBtn" onclick="resetAll()" style="display:none">������ϰ</button>
   </div>
 
   <footer>
-    <p>Made for UML Final Exam · <a href="https://github.com/xiaodangjia105/UML--" target="_blank">GitHub</a></p>
+    <p>Made for UML Final Exam �� <a href="https://github.com/xiaodangjia105/uml-exam-practice" target="_blank">GitHub</a></p>
   </footer>
 </div>
 
 <script>
 var questions = [
-  // === 选择题 ===
-  {type:'choice', q:'( )是系统中遵从一组接口且提供实现的一个物理物件，通常指开发和运行时的类的物理实现。', opts:['部署图','类','接口','组件'], ans:3},
-  {type:'choice', q:'顺序图中由类角色、生命线、激活条和( )组成。', opts:['关系','消息'], ans:1},
-  {type:'choice', q:'反馈图形的必选建模方式为( )', opts:['状态图','用例图','活动图','类图'], ans:0},
-  {type:'choice', q:'下列哪个不是面向对象程序设计的主要特征？', opts:['封装','多态','继承','结构'], ans:3},
-  {type:'choice', q:'在建立系统用例模型时，以下哪一项信息对拟定系统参数没有用处？', opts:['谁是系统的重要用户，他们会随时使用系统的重要功能','谁来管理维护系统以保证系统正常运行','系统的功能地方如何去实现','系统需要与哪些其他的系统进行交互'], ans:2},
-  {type:'choice', q:'在UML中，什么图显示组内接口协作以及它们之间的关系？', opts:['状态图','类图','用例图','部署图'], ans:1},
-  {type:'choice', q:'软件需求包括定义、软件设计、软件测试、软件维护等阶段。以下哪个阶段不属于软件需求的范畴？', opts:['软件需求定义','软件设计','软件测试','软件维护'], ans:1},
-  {type:'choice', q:'下面哪个UML图用于描述系统的硬件拓扑结构？', opts:['类图','部署图','状态图','活动图'], ans:1},
-  {type:'choice', q:'下面哪个不属于UML的静态图？', opts:['状态图','用例图','对象图','类图'], ans:0},
-  {type:'choice', q:'下面对状态图描述不正确的是( )', opts:['状态图通过建立类对象的生命周期模型来描述对象随着时间变化的动态性','状态图可用于描述状态和动作的顺序，不仅可以展现一个对象拥有的状态，还可以说明事件如何随着时间的推移来影响这些状态','状态图的重要目的是描述对象创建、撤销过程中资源的不同状态，有助于开发者提高开发效率','状态图描述了一个实体基于事件反应的动态行为，显示了该实体如何根据当前所处的状态对不同的事件做出反应'], ans:2},
-  {type:'choice', q:'UML中类通常分为三种，下面哪一个不是其中之一？', opts:['实体类','抽象类','控制类','边界类'], ans:1},
-  {type:'choice', q:'UML建模工具的主要作用是？', opts:['编写程序代码','绘制系统架构图','测试系统功能','管理项目进度'], ans:1},
-  {type:'choice', q:'UML建模工具中用于描述系统动态行为的图是？', opts:['类图','用例图','时序图','组件图'], ans:2},
-  {type:'choice', q:'UML中用于把元素组织成组的通用机制是？', opts:['类','接口','包','组件'], ans:2},
-  {type:'choice', q:'组件图展现了组件之间的依赖关系，它专注于系统的______实现视图。', opts:['动态','静态','基础','实体'], ans:1},
-  {type:'choice', q:'下列哪一项不是建模的基本原则？', opts:['仔细选择模型','没有单一模型可以在所有抽象层次上都适用','模型要与现实相联系','对一个重要的系统，用一个模型就足以解决所有问题'], ans:3},
-  {type:'choice', q:'UML建模中的事物包括结构事物、分组事物、注释事物和什么事物？', opts:['实体事物','边界事物','行为事物','共同事物'], ans:2},
-  {type:'choice', q:'UML中的四种核心关系包括泛化、关联、依赖和什么？', opts:['继承','合作','实现','突显'], ans:2},
-  {type:'choice', q:'对于UML建模工具描述错误的是？', opts:['建模工具可以帮助开发者更直观地理解系统结构','建模工具可以提升团队的协作效率','建模工具可以帮助发现设计中的简单缺陷','建模工具可以直接生成完整可运行的代码'], ans:3},
+  // === ѡ���� ===
+  {type:'choice', q:'( )��ϵͳ�����һ��ӿ����ṩʵ�ֵ�һ�����������ͨ��ָ����������ʱ���������ʵ�֡�', opts:['����ͼ','��','�ӿ�','���'], ans:3},
+  {type:'choice', q:'˳��ͼ�������ɫ�������ߡ���������( )��ɡ�', opts:['��ϵ','��Ϣ'], ans:1},
+  {type:'choice', q:'����ͼ�εı�ѡ��ģ��ʽΪ( )', opts:['״̬ͼ','����ͼ','�ͼ','��ͼ'], ans:0},
+  {type:'choice', q:'�����ĸ�����������������Ƶ���Ҫ������', opts:['��װ','��̬','�̳�','�ṹ'], ans:3},
+  {type:'choice', q:'�ڽ���ϵͳ����ģ��ʱ��������һ����Ϣ���ⶨϵͳ����û���ô���', opts:['˭��ϵͳ����Ҫ�û������ǻ���ʱʹ��ϵͳ����Ҫ����','˭������ά��ϵͳ�Ա�֤ϵͳ��������','ϵͳ�Ĺ��ܵط����ȥʵ��','ϵͳ��Ҫ����Щ������ϵͳ���н���'], ans:2},
+  {type:'choice', q:'��UML�У�ʲôͼ��ʾ���ڽӿ�Э���Լ�����֮��Ĺ�ϵ��', opts:['״̬ͼ','��ͼ','����ͼ','����ͼ'], ans:1},
+  {type:'choice', q:'��������������塢������ơ��������ԡ�����ά���Ƚ׶Ρ������ĸ��׶β�������������ķ��룿', opts:['����������','�������','��������','����ά��'], ans:1},
+  {type:'choice', q:'�����ĸ�UMLͼ��������ϵͳ��Ӳ�����˽ṹ��', opts:['��ͼ','����ͼ','״̬ͼ','�ͼ'], ans:1},
+  {type:'choice', q:'�����ĸ�������UML�ľ�̬ͼ��', opts:['״̬ͼ','����ͼ','����ͼ','��ͼ'], ans:0},
+  {type:'choice', q:'�����״̬ͼ��������ȷ����( )', opts:['״̬ͼͨ��������������������ģ����������������ʱ��仯�Ķ�̬��','״̬ͼ����������״̬�Ͷ�����˳�򣬲�������չ��һ������ӵ�е�״̬��������˵���¼��������ʱ���������Ӱ����Щ״̬','״̬ͼ����ҪĿ�����������󴴽���������������Դ�Ĳ�ͬ״̬�������ڿ�������߿���Ч��','״̬ͼ������һ��ʵ������¼���Ӧ�Ķ�̬��Ϊ����ʾ�˸�ʵ����θ��ݵ�ǰ������״̬�Բ�ͬ���¼�������Ӧ'], ans:2},
+  {type:'choice', q:'UML����ͨ����Ϊ���֣�������һ����������֮һ��', opts:['ʵ����','������','������','�߽���'], ans:1},
+  {type:'choice', q:'UML��ģ���ߵ���Ҫ�����ǣ�', opts:['��д�������','����ϵͳ�ܹ�ͼ','����ϵͳ����','������Ŀ����'], ans:1},
+  {type:'choice', q:'UML��ģ��������������ϵͳ��̬��Ϊ��ͼ�ǣ�', opts:['��ͼ','����ͼ','ʱ��ͼ','���ͼ'], ans:2},
+  {type:'choice', q:'UML�����ڰ�Ԫ����֯�����ͨ�û����ǣ�', opts:['��','�ӿ�','��','���'], ans:2},
+  {type:'choice', q:'���ͼչ�������֮���������ϵ����רע��ϵͳ��______ʵ����ͼ��', opts:['��̬','��̬','����','ʵ��'], ans:1},
+  {type:'choice', q:'������һ��ǽ�ģ�Ļ���ԭ��', opts:['��ϸѡ��ģ��','û�е�һģ�Ϳ��������г������϶�����','ģ��Ҫ����ʵ����ϵ','��һ����Ҫ��ϵͳ����һ��ģ�;����Խ����������'], ans:3},
+  {type:'choice', q:'UML��ģ�е���������ṹ����������ע�������ʲô���', opts:['ʵ������','�߽�����','��Ϊ����','��ͬ����'], ans:2},
+  {type:'choice', q:'UML�е����ֺ��Ĺ�ϵ����������������������ʲô��', opts:['�̳�','����','ʵ��','ͻ��'], ans:2},
+  {type:'choice', q:'����UML��ģ��������������ǣ�', opts:['��ģ���߿��԰��������߸�ֱ�۵�����ϵͳ�ṹ','��ģ���߿��������Ŷӵ�Э��Ч��','��ģ���߿��԰�����������еļ�ȱ��','��ģ���߿���ֱ���������������еĴ���'], ans:3},
 
-  // === 判断题 ===
-  {type:'tf', q:'UML中类的标准三分法：实体类、控制类、边界类（对应MVC架构）', ans:1},
-  {type:'tf', q:'对象是类的实例化', ans:1},
-  {type:'tf', q:'状态图必须以初始状态（开始节点）开始，并且必须以终止状态（结束节点）结束。', ans:0},
-  {type:'tf', q:'在UML包图中，包的访问权限控制仅影响包内元素的可见性，不会影响跨包引用。', ans:0},
-  {type:'tf', q:'在UML活动图中，泳道（Swimlane）主要用于区分不同的参与者和职责。', ans:1},
-  {type:'tf', q:'状态图主要描述一个对象在其生命周期内，随着时间推移因事件驱动而发生的状态变化。', ans:1},
-  {type:'tf', q:'部署图用于描述系统的硬件结构以及软件组件在硬件节点上的分布情况。', ans:1},
-  {type:'tf', q:'在类图中，组合和聚合是两种特殊的关联关系，组合关系比聚合关系更强。', ans:1},
-  {type:'tf', q:'在顺序图当中，消息只能是同步的，不能是异步的。', ans:0},
-  {type:'tf', q:'UML是一种建模语言而不是一种软件开发方法。', ans:1},
-  {type:'tf', q:'协作图和顺序图在语义上是等价的，可以相互转化，但侧重点和表现形式不同。', ans:1},
-  {type:'tf', q:'在活动图当中用于表示流程起点的符号是初始节点（实心小圆点）。', ans:1},
-  {type:'tf', q:'UML的四种核心关系是泛化、关联、依赖和继承，它们在语义上是一致的。', ans:0}
+  // === �ж��� ===
+  {type:'tf', q:'UML����ı�׼���ַ���ʵ���ࡢ�����ࡢ�߽��ࣨ��ӦMVC�ܹ���', ans:1},
+  {type:'tf', q:'���������ʵ����', ans:1},
+  {type:'tf', q:'״̬ͼ�����Գ�ʼ״̬����ʼ�ڵ㣩��ʼ�����ұ�������ֹ״̬�������ڵ㣩������', ans:0},
+  {type:'tf', q:'��UML��ͼ�У����ķ���Ȩ�޿��ƽ�Ӱ�����Ԫ�صĿɼ��ԣ�����Ӱ�������á�', ans:0},
+  {type:'tf', q:'��UML�ͼ�У�Ӿ����Swimlane����Ҫ�������ֲ�ͬ�Ĳ����ߺ�ְ��', ans:1},
+  {type:'tf', q:'״̬ͼ��Ҫ����һ�������������������ڣ�����ʱ���������¼�������������״̬�仯��', ans:1},
+  {type:'tf', q:'����ͼ��������ϵͳ��Ӳ���ṹ�Լ����������Ӳ���ڵ��ϵķֲ������', ans:1},
+  {type:'tf', q:'����ͼ�У���Ϻ;ۺ�����������Ĺ�����ϵ����Ϲ�ϵ�ȾۺϹ�ϵ��ǿ��', ans:1},
+  {type:'tf', q:'��˳��ͼ���У���Ϣֻ����ͬ���ģ��������첽�ġ�', ans:0},
+  {type:'tf', q:'UML��һ�ֽ�ģ���Զ�����һ����������������', ans:1},
+  {type:'tf', q:'Э��ͼ��˳��ͼ���������ǵȼ۵ģ������໥ת���������ص�ͱ�����ʽ��ͬ��', ans:1},
+  {type:'tf', q:'�ڻͼ�������ڱ�ʾ�������ķ����ǳ�ʼ�ڵ㣨ʵ��СԲ�㣩��', ans:1},
+  {type:'tf', q:'UML�����ֺ��Ĺ�ϵ�Ƿ����������������ͼ̳У���������������һ�µġ�', ans:0}
 ];
 
 var submitted = false;
@@ -415,13 +415,13 @@ function buildUI() {
   var tfIdx = 0;
   var globalIdx = 0;
 
-  html += '<div class="section-title">选择题</div>';
+  html += '<div class="section-title">ѡ����</div>';
   for (var i=0; i<questions.length; i++) {
     var q = questions[i];
     if (q.type === 'choice') {
       choiceIdx++;
       html += '<div class="card" id="card'+i+'">';
-      html += '<div class="q-header"><span class="q-num">'+choiceIdx+'</span><span class="q-text">'+q.q+'</span><span class="q-type choice">单选</span></div>';
+      html += '<div class="q-header"><span class="q-num">'+choiceIdx+'</span><span class="q-text">'+q.q+'</span><span class="q-type choice">��ѡ</span></div>';
       html += '<div class="options">';
       for (var j=0; j<q.opts.length; j++) {
         html += '<label class="option" id="opt'+i+'_'+j+'" onclick="selectOpt('+i+','+j+')">';
@@ -436,21 +436,21 @@ function buildUI() {
     }
   }
 
-  html += '<div class="section-title">判断题</div>';
+  html += '<div class="section-title">�ж���</div>';
   var tfNum = 0;
   for (var i=0; i<questions.length; i++) {
     var q = questions[i];
     if (q.type === 'tf') {
       tfNum++;
       html += '<div class="card" id="card'+i+'">';
-      html += '<div class="q-header"><span class="q-num">'+tfNum+'</span><span class="q-text">'+q.q+'</span><span class="q-type tf">判断</span></div>';
+      html += '<div class="q-header"><span class="q-num">'+tfNum+'</span><span class="q-text">'+q.q+'</span><span class="q-type tf">�ж�</span></div>';
       html += '<div class="options">';
       html += '<label class="option" id="opt'+i+'_1" onclick="selectOpt('+i+',1)">';
       html += '<input type="radio" name="q'+i+'" value="1">';
-      html += '<span class="dot"></span><span>✓ 正确</span></label>';
+      html += '<span class="dot"></span><span>? ��ȷ</span></label>';
       html += '<label class="option" id="opt'+i+'_0" onclick="selectOpt('+i+',0)">';
       html += '<input type="radio" name="q'+i+'" value="0">';
-      html += '<span class="dot"></span><span>✗ 错误</span></label>';
+      html += '<span class="dot"></span><span>? ����</span></label>';
       html += '</div>';
       html += '<div class="feedback" id="fb'+i+'"></div>';
       html += '</div>';
@@ -480,7 +480,7 @@ function updateProgress() {
   var answered = Object.keys(userAnswers).length;
   var pct = Math.round(answered / questions.length * 100);
   document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('answeredCount').textContent = '已答 ' + answered + ' / ' + questions.length;
+  document.getElementById('answeredCount').textContent = '�Ѵ� ' + answered + ' / ' + questions.length;
   document.getElementById('progressPercent').textContent = pct + '%';
 }
 
@@ -500,8 +500,8 @@ function submit() {
       unanswered++;
       card.classList.add('unanswered');
       fb.className = 'feedback unanswered-fb show';
-      var correctLabel = q.type==='tf' ? (q.ans===1?'正确':'错误') : letter(q.ans)+'. '+q.opts[q.ans];
-      fb.textContent = '⚠ 未作答，正确答案：' + correctLabel;
+      var correctLabel = q.type==='tf' ? (q.ans===1?'��ȷ':'����') : letter(q.ans)+'. '+q.opts[q.ans];
+      fb.textContent = '? δ������ȷ�𰸣�' + correctLabel;
       continue;
     }
 
@@ -509,12 +509,12 @@ function submit() {
       correct++;
       card.classList.add('correct');
       fb.className = 'feedback correct-fb show';
-      fb.textContent = '✓ 回答正确';
+      fb.textContent = '? �ش���ȷ';
     } else {
       card.classList.add('wrong');
       fb.className = 'feedback wrong-fb show';
-      var correctLabel = q.type==='tf' ? (q.ans===1?'正确':'错误') : letter(q.ans)+'. '+q.opts[q.ans];
-      fb.textContent = '✗ 正确答案：' + correctLabel;
+      var correctLabel = q.type==='tf' ? (q.ans===1?'��ȷ':'����') : letter(q.ans)+'. '+q.opts[q.ans];
+      fb.textContent = '? ��ȷ�𰸣�' + correctLabel;
     }
   }
 
@@ -539,15 +539,15 @@ function submit() {
 
   var score = Math.round(correct / total * 100);
   var panel = document.getElementById('resultPanel');
-  var grade = score >= 90 ? '🏆 优秀' : score >= 70 ? '👍 良好' : score >= 60 ? '📚 及格' : '💪 继续加油';
+  var grade = score >= 90 ? '?? ����' : score >= 70 ? '?? ����' : score >= 60 ? '?? ����' : '?? ��������';
   panel.innerHTML =
-    '<div class="score">' + score + ' 分</div>' +
+    '<div class="score">' + score + ' ��</div>' +
     '<div style="font-size:1.2rem;margin-top:4px">' + grade + '</div>' +
     '<div class="detail">' +
-      '<div>正确 <span>' + correct + '</span></div>' +
-      '<div>错误 <span>' + (total - correct - unanswered) + '</span></div>' +
-      '<div>未答 <span>' + unanswered + '</span></div>' +
-      '<div>总计 <span>' + total + '</span></div>' +
+      '<div>��ȷ <span>' + correct + '</span></div>' +
+      '<div>���� <span>' + (total - correct - unanswered) + '</span></div>' +
+      '<div>δ�� <span>' + unanswered + '</span></div>' +
+      '<div>�ܼ� <span>' + total + '</span></div>' +
     '</div>';
   panel.classList.add('show');
 
