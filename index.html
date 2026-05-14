@@ -1,0 +1,590 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UML 期末练习</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --sub: #6c757d;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --border: #e5e7eb;
+    --correct: #059669;
+    --wrong: #dc2626;
+    --correct-bg: #ecfdf5;
+    --wrong-bg: #fef2f2;
+    --radius: 16px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 780px; margin:0 auto; padding: 40px 20px 80px }
+
+  header {
+    text-align: center;
+    padding: 48px 0 40px;
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p {
+    color: var(--sub);
+    margin-top: 6px;
+    font-size: .95rem;
+  }
+
+  .progress-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    padding: 12px 0 16px;
+  }
+  .progress-bar {
+    height: 6px;
+    border-radius: 99px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    border-radius: 99px;
+    transition: width .4s ease;
+  }
+  .progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: .82rem;
+    color: var(--sub);
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 36px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--accent);
+    border-radius: 99px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    transition: all .2s ease;
+    position: relative;
+  }
+  .card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: #d1d5db;
+  }
+  .card.correct {
+    border-color: var(--correct);
+    background: var(--correct-bg);
+  }
+  .card.wrong {
+    border-color: var(--wrong);
+    background: var(--wrong-bg);
+  }
+  .card.unanswered {
+    border-color: #f59e0b;
+    background: #fffbeb;
+  }
+
+  .q-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: var(--accent);
+    font-size: .8rem;
+    font-weight: 700;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .q-text {
+    font-weight: 500;
+    font-size: .98rem;
+  }
+  .q-type {
+    font-size: .72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+  .q-type.choice {
+    background: #eef2ff;
+    color: var(--accent);
+  }
+  .q-type.tf {
+    background: #fef3c7;
+    color: #b45309;
+  }
+
+  .options { display:flex; flex-direction:column; gap:6px }
+  .option {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: all .15s ease;
+    font-size: .92rem;
+    user-select: none;
+  }
+  .option:hover:not(.disabled) {
+    border-color: var(--accent);
+    background: #faf9ff;
+  }
+  .option input { display:none }
+  .option .dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    margin-right: 12px;
+    flex-shrink: 0;
+    transition: all .2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .option .dot::after {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all .2s ease;
+  }
+  .option.selected .dot {
+    border-color: var(--accent);
+  }
+  .option.selected .dot::after {
+    background: var(--accent);
+  }
+  .option.selected {
+    border-color: var(--accent);
+    background: #faf9ff;
+  }
+
+  .option.disabled { cursor:default; opacity:.7 }
+  .option.correct-ans {
+    border-color: var(--correct) !important;
+    background: var(--correct-bg) !important;
+  }
+  .option.correct-ans .dot {
+    border-color: var(--correct) !important;
+  }
+  .option.correct-ans .dot::after {
+    background: var(--correct) !important;
+  }
+  .option.wrong-ans {
+    border-color: var(--wrong) !important;
+    background: var(--wrong-bg) !important;
+  }
+  .option.wrong-ans .dot {
+    border-color: var(--wrong) !important;
+  }
+  .option.wrong-ans .dot::after {
+    background: var(--wrong) !important;
+  }
+
+  .feedback {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: .88rem;
+    display: none;
+  }
+  .feedback.show { display:block }
+  .feedback.correct-fb {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  .feedback.wrong-fb {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  .feedback.unanswered-fb {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .btn-wrap {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+    letter-spacing: .01em;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(79,70,229,.35);
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 6px 20px rgba(79,70,229,.45);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: var(--card);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover {
+    border-color: #c4b5fd;
+    background: #faf9ff;
+  }
+  .btn + .btn { margin-left: 12px }
+
+  .result {
+    text-align: center;
+    padding: 28px;
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 24px;
+    display: none;
+  }
+  .result.show { display:block; animation: fadeUp .4s ease }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(12px) }
+    to   { opacity:1; transform:translateY(0) }
+  }
+  .result .score {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .result .detail {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 12px;
+    font-size: .9rem;
+    color: var(--sub);
+  }
+  .result .detail span { font-weight:600; color:var(--text) }
+
+  footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    color: var(--sub);
+    font-size: .82rem;
+  }
+  footer a { color:var(--accent); text-decoration:none }
+
+  @media (max-width:600px) {
+    .container { padding:20px 12px 60px }
+    .card { padding:18px 16px }
+    header h1 { font-size:1.5rem }
+    .result .detail { flex-direction:column; gap:8px }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>UML 期末练习</h1>
+    <p>选择题 19 道 &nbsp;·&nbsp; 判断题 13 道 &nbsp;·&nbsp; 共 32 题</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-text">
+      <span id="answeredCount">已答 0 / 32</span>
+      <span id="progressPercent">0%</span>
+    </div>
+  </div>
+
+  <div id="resultPanel" class="result"></div>
+
+  <div id="questions"></div>
+
+  <div class="btn-wrap">
+    <button class="btn btn-primary" id="submitBtn" onclick="submit()">提交答案</button>
+    <button class="btn btn-secondary" id="resetBtn" onclick="resetAll()" style="display:none">重新练习</button>
+  </div>
+
+  <footer>
+    <p>Made for UML Final Exam · <a href="https://github.com/xiaodangjia105/UML--" target="_blank">GitHub</a></p>
+  </footer>
+</div>
+
+<script>
+var questions = [
+  // === 选择题 ===
+  {type:'choice', q:'( )是系统中遵从一组接口且提供实现的一个物理物件，通常指开发和运行时的类的物理实现。', opts:['部署图','类','接口','组件'], ans:3},
+  {type:'choice', q:'顺序图中由类角色、生命线、激活条和( )组成。', opts:['关系','消息'], ans:1},
+  {type:'choice', q:'反馈图形的必选建模方式为( )', opts:['状态图','用例图','活动图','类图'], ans:0},
+  {type:'choice', q:'下列哪个不是面向对象程序设计的主要特征？', opts:['封装','多态','继承','结构'], ans:3},
+  {type:'choice', q:'在建立系统用例模型时，以下哪一项信息对拟定系统参数没有用处？', opts:['谁是系统的重要用户，他们会随时使用系统的重要功能','谁来管理维护系统以保证系统正常运行','系统的功能地方如何去实现','系统需要与哪些其他的系统进行交互'], ans:2},
+  {type:'choice', q:'在UML中，什么图显示组内接口协作以及它们之间的关系？', opts:['状态图','类图','用例图','部署图'], ans:1},
+  {type:'choice', q:'软件需求包括定义、软件设计、软件测试、软件维护等阶段。以下哪个阶段不属于软件需求的范畴？', opts:['软件需求定义','软件设计','软件测试','软件维护'], ans:1},
+  {type:'choice', q:'下面哪个UML图用于描述系统的硬件拓扑结构？', opts:['类图','部署图','状态图','活动图'], ans:1},
+  {type:'choice', q:'下面哪个不属于UML的静态图？', opts:['状态图','用例图','对象图','类图'], ans:0},
+  {type:'choice', q:'下面对状态图描述不正确的是( )', opts:['状态图通过建立类对象的生命周期模型来描述对象随着时间变化的动态性','状态图可用于描述状态和动作的顺序，不仅可以展现一个对象拥有的状态，还可以说明事件如何随着时间的推移来影响这些状态','状态图的重要目的是描述对象创建、撤销过程中资源的不同状态，有助于开发者提高开发效率','状态图描述了一个实体基于事件反应的动态行为，显示了该实体如何根据当前所处的状态对不同的事件做出反应'], ans:2},
+  {type:'choice', q:'UML中类通常分为三种，下面哪一个不是其中之一？', opts:['实体类','抽象类','控制类','边界类'], ans:1},
+  {type:'choice', q:'UML建模工具的主要作用是？', opts:['编写程序代码','绘制系统架构图','测试系统功能','管理项目进度'], ans:1},
+  {type:'choice', q:'UML建模工具中用于描述系统动态行为的图是？', opts:['类图','用例图','时序图','组件图'], ans:2},
+  {type:'choice', q:'UML中用于把元素组织成组的通用机制是？', opts:['类','接口','包','组件'], ans:2},
+  {type:'choice', q:'组件图展现了组件之间的依赖关系，它专注于系统的______实现视图。', opts:['动态','静态','基础','实体'], ans:1},
+  {type:'choice', q:'下列哪一项不是建模的基本原则？', opts:['仔细选择模型','没有单一模型可以在所有抽象层次上都适用','模型要与现实相联系','对一个重要的系统，用一个模型就足以解决所有问题'], ans:3},
+  {type:'choice', q:'UML建模中的事物包括结构事物、分组事物、注释事物和什么事物？', opts:['实体事物','边界事物','行为事物','共同事物'], ans:2},
+  {type:'choice', q:'UML中的四种核心关系包括泛化、关联、依赖和什么？', opts:['继承','合作','实现','突显'], ans:2},
+  {type:'choice', q:'对于UML建模工具描述错误的是？', opts:['建模工具可以帮助开发者更直观地理解系统结构','建模工具可以提升团队的协作效率','建模工具可以帮助发现设计中的简单缺陷','建模工具可以直接生成完整可运行的代码'], ans:3},
+
+  // === 判断题 ===
+  {type:'tf', q:'UML中类的标准三分法：实体类、控制类、边界类（对应MVC架构）', ans:1},
+  {type:'tf', q:'对象是类的实例化', ans:1},
+  {type:'tf', q:'状态图必须以初始状态（开始节点）开始，并且必须以终止状态（结束节点）结束。', ans:0},
+  {type:'tf', q:'在UML包图中，包的访问权限控制仅影响包内元素的可见性，不会影响跨包引用。', ans:0},
+  {type:'tf', q:'在UML活动图中，泳道（Swimlane）主要用于区分不同的参与者和职责。', ans:1},
+  {type:'tf', q:'状态图主要描述一个对象在其生命周期内，随着时间推移因事件驱动而发生的状态变化。', ans:1},
+  {type:'tf', q:'部署图用于描述系统的硬件结构以及软件组件在硬件节点上的分布情况。', ans:1},
+  {type:'tf', q:'在类图中，组合和聚合是两种特殊的关联关系，组合关系比聚合关系更强。', ans:1},
+  {type:'tf', q:'在顺序图当中，消息只能是同步的，不能是异步的。', ans:0},
+  {type:'tf', q:'UML是一种建模语言而不是一种软件开发方法。', ans:1},
+  {type:'tf', q:'协作图和顺序图在语义上是等价的，可以相互转化，但侧重点和表现形式不同。', ans:1},
+  {type:'tf', q:'在活动图当中用于表示流程起点的符号是初始节点（实心小圆点）。', ans:1},
+  {type:'tf', q:'UML的四种核心关系是泛化、关联、依赖和继承，它们在语义上是一致的。', ans:0}
+];
+
+var submitted = false;
+var userAnswers = {};
+
+function letter(i) { return String.fromCharCode(65+i) }
+
+function buildUI() {
+  var html = '';
+  var choiceIdx = 0;
+  var tfIdx = 0;
+  var globalIdx = 0;
+
+  html += '<div class="section-title">选择题</div>';
+  for (var i=0; i<questions.length; i++) {
+    var q = questions[i];
+    if (q.type === 'choice') {
+      choiceIdx++;
+      html += '<div class="card" id="card'+i+'">';
+      html += '<div class="q-header"><span class="q-num">'+choiceIdx+'</span><span class="q-text">'+q.q+'</span><span class="q-type choice">单选</span></div>';
+      html += '<div class="options">';
+      for (var j=0; j<q.opts.length; j++) {
+        html += '<label class="option" id="opt'+i+'_'+j+'" onclick="selectOpt('+i+','+j+')">';
+        html += '<input type="radio" name="q'+i+'" value="'+j+'">';
+        html += '<span class="dot"></span>';
+        html += '<span>'+letter(j)+'. '+q.opts[j]+'</span>';
+        html += '</label>';
+      }
+      html += '</div>';
+      html += '<div class="feedback" id="fb'+i+'"></div>';
+      html += '</div>';
+    }
+  }
+
+  html += '<div class="section-title">判断题</div>';
+  var tfNum = 0;
+  for (var i=0; i<questions.length; i++) {
+    var q = questions[i];
+    if (q.type === 'tf') {
+      tfNum++;
+      html += '<div class="card" id="card'+i+'">';
+      html += '<div class="q-header"><span class="q-num">'+tfNum+'</span><span class="q-text">'+q.q+'</span><span class="q-type tf">判断</span></div>';
+      html += '<div class="options">';
+      html += '<label class="option" id="opt'+i+'_1" onclick="selectOpt('+i+',1)">';
+      html += '<input type="radio" name="q'+i+'" value="1">';
+      html += '<span class="dot"></span><span>✓ 正确</span></label>';
+      html += '<label class="option" id="opt'+i+'_0" onclick="selectOpt('+i+',0)">';
+      html += '<input type="radio" name="q'+i+'" value="0">';
+      html += '<span class="dot"></span><span>✗ 错误</span></label>';
+      html += '</div>';
+      html += '<div class="feedback" id="fb'+i+'"></div>';
+      html += '</div>';
+    }
+  }
+
+  document.getElementById('questions').innerHTML = html;
+}
+
+function selectOpt(qIdx, optIdx) {
+  if (submitted) return;
+  userAnswers[qIdx] = optIdx;
+
+  var q = questions[qIdx];
+  var opts = q.type==='tf' ? [0,1] : Object.keys(q.opts).map(Number);
+  for (var j=0; j<opts.length; j++) {
+    var oEl = document.getElementById('opt'+qIdx+'_'+opts[j]);
+    if (oEl) oEl.classList.remove('selected');
+  }
+  var sel = document.getElementById('opt'+qIdx+'_'+optIdx);
+  if (sel) sel.classList.add('selected');
+
+  updateProgress();
+}
+
+function updateProgress() {
+  var answered = Object.keys(userAnswers).length;
+  var pct = Math.round(answered / questions.length * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('answeredCount').textContent = '已答 ' + answered + ' / ' + questions.length;
+  document.getElementById('progressPercent').textContent = pct + '%';
+}
+
+function submit() {
+  if (submitted) return;
+
+  var total = questions.length;
+  var correct = 0;
+  var unanswered = 0;
+
+  for (var i=0; i<total; i++) {
+    var q = questions[i];
+    var card = document.getElementById('card'+i);
+    var fb = document.getElementById('fb'+i);
+
+    if (userAnswers[i] === undefined) {
+      unanswered++;
+      card.classList.add('unanswered');
+      fb.className = 'feedback unanswered-fb show';
+      var correctLabel = q.type==='tf' ? (q.ans===1?'正确':'错误') : letter(q.ans)+'. '+q.opts[q.ans];
+      fb.textContent = '⚠ 未作答，正确答案：' + correctLabel;
+      continue;
+    }
+
+    if (userAnswers[i] === q.ans) {
+      correct++;
+      card.classList.add('correct');
+      fb.className = 'feedback correct-fb show';
+      fb.textContent = '✓ 回答正确';
+    } else {
+      card.classList.add('wrong');
+      fb.className = 'feedback wrong-fb show';
+      var correctLabel = q.type==='tf' ? (q.ans===1?'正确':'错误') : letter(q.ans)+'. '+q.opts[q.ans];
+      fb.textContent = '✗ 正确答案：' + correctLabel;
+    }
+  }
+
+  // Mark all options
+  for (var i=0; i<total; i++) {
+    var q = questions[i];
+    var optsCount = q.type==='tf' ? 2 : q.opts.length;
+    for (var j=0; j<optsCount; j++) {
+      var oEl = document.getElementById('opt'+i+'_'+j);
+      if (!oEl) continue;
+      oEl.classList.add('disabled');
+      if (j === q.ans) {
+        oEl.classList.add('correct-ans');
+      }
+      if (userAnswers[i] !== undefined && userAnswers[i] === j && userAnswers[i] !== q.ans) {
+        oEl.classList.add('wrong-ans');
+      }
+    }
+  }
+
+  submitted = true;
+
+  var score = Math.round(correct / total * 100);
+  var panel = document.getElementById('resultPanel');
+  var grade = score >= 90 ? '🏆 优秀' : score >= 70 ? '👍 良好' : score >= 60 ? '📚 及格' : '💪 继续加油';
+  panel.innerHTML =
+    '<div class="score">' + score + ' 分</div>' +
+    '<div style="font-size:1.2rem;margin-top:4px">' + grade + '</div>' +
+    '<div class="detail">' +
+      '<div>正确 <span>' + correct + '</span></div>' +
+      '<div>错误 <span>' + (total - correct - unanswered) + '</span></div>' +
+      '<div>未答 <span>' + unanswered + '</span></div>' +
+      '<div>总计 <span>' + total + '</span></div>' +
+    '</div>';
+  panel.classList.add('show');
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'inline-flex';
+
+  panel.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function resetAll() {
+  submitted = false;
+  userAnswers = {};
+  for (var i=0; i<questions.length; i++) {
+    var card = document.getElementById('card'+i);
+    card.className = 'card';
+    var fb = document.getElementById('fb'+i);
+    fb.className = 'feedback';
+    fb.textContent = '';
+
+    var q = questions[i];
+    var optsCount = q.type==='tf' ? 2 : q.opts.length;
+    for (var j=0; j<optsCount; j++) {
+      var oEl = document.getElementById('opt'+i+'_'+j);
+      if (!oEl) continue;
+      oEl.classList.remove('selected','disabled','correct-ans','wrong-ans');
+    }
+  }
+
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('resultPanel').innerHTML = '';
+  document.getElementById('submitBtn').style.display = 'inline-flex';
+  document.getElementById('resetBtn').style.display = 'none';
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+buildUI();
+</script>
+</body>
+</html>
